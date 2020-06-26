@@ -1,0 +1,561 @@
+复习
+    ES6
+        
+1、特点
+    1. ES5升级版本
+    2. 提供了简便的语法
+        Set、Map
+        迭代器
+        箭头函数
+        ...
+    3. 在浏览器上的兼容性比较差
+
+        学习环境  nodejs  ES6
+            脚手架
+        开发环境  windows ES5
+    
+2、模块化
+    ip/dist/index.html
+
+3、基础语法
+    1) let命令
+        特点：
+            1. 变量无法重复声明
+                let a = 1;
+                let a = 2; // 报错
+            2. 存在块级作用域
+                {
+                    let a = 1;
+                    console.log(a); // 1
+                }
+                console.log(a); // 报错
+            3. 不允许变量的提升
+                console.log(a); // 报错
+                let a = 1;
+            4. 存在暂时性死区
+                var temp = 1;
+                if(true){
+                    temp = 2;
+                    let temp; // 报错
+                }
+            
+    2) const命令
+        特点：
+            1. 存在块级作用域
+            2. 存在暂时性死区
+            3. 变量无法重复声明
+            4. 变量的声明和初始化必须同时进行
+                const a;
+                a = 1;
+                console.log(a); // 报错
+
+    3) 解构(模式匹配)
+        1. 数组的解构
+            变量的取值为对应索引位置上的值
+
+            var a = 1;
+            var b = 2;
+            var c = 3;
+            console.log(a,b,c); // 1 2 3
+
+            ->ES6
+            
+            let [a,b,c] = [1,2,3];
+            console.log(a,b,c); // 1 2 3
+
+
+            等号左边个数大于右边
+                let [a,b,c] = [1,2];
+                console.log(a,b,c); // 1 2 undefined
+            等号左边个数小于右边
+                let [a,b] = [1,2,3];
+                console.log(a,b); // 1 2 
+            
+        2. 数组解构默认值
+            let [a,b,c='d'] = [1,2];
+            console.log(a,b,c); // 1 2 d
+
+            默认值生效的前提是，匹配不成功或者是匹配到的值为undefined
+
+        3. 对象的解构
+            变量的取值由它对应同名的属性名的值决定
+            var obj = {
+                name:'xpf',
+                age:25,
+                gender:'male'
+            }
+            let {name,age,gender} = obj;
+            ==>等价于(对象的简写)
+            let {name:name,age:age,gender:gender} = obj;
+            
+            解构失败时，值为undefined
+        
+        4. 对象解构的默认值
+            var obj = {
+                name:'xpf',
+                age:25
+            }
+            let {name,age,gender} = obj;
+            console.log(gender); // undefined
+
+            ->
+
+            var obj = {
+                name:'xpf',
+                age:25
+            }
+            let {name,age,gender='male'} = obj;
+            console.log(gender); // male
+
+            默认值生效的前提是，匹配不成功或者是匹配到的值为undefined
+
+        5. 解构的用途
+            1、两个变量的值互换
+            2、让函数返回多个值
+                将多个返回值放在{}或[]中返回
+
+                es6时通过解构取值比较简单
+            3、快速从对象中取值
+            4、函数参数默认值
+                function sayName({name,age,gender='male'}){
+
+                }
+                sayName({name,age})
+
+学习
+
+4、对象的扩展
+    ES6 允许在大括号里面，直接写入变量和函数，作为对象的属性和方法
+    1) 对象属性的简写
+        在之前写对象
+            let name = 'xpf';
+            let obj = {
+                name:name
+            }
+            console.log(obj.name); // xpf
+
+        ES6的简写
+            let name = 'xpf';
+            let obj = {
+                name
+            }
+            console.log(obj.name); // xpf
+
+            错误写法：
+            let gender = 'xpf';
+            let obj = {
+                name
+            }
+            console.log(obj.name); // name is not defined
+
+        对象的解构
+            var obj = {
+                name:'xpf',
+                age:25,
+                gender:'male'
+            }
+            let {name,age,gender} = obj;
+
+            ===> 等价于
+            let {name:name,age:age,gender:gender} = obj;
+
+    2) 对象方法的简写
+        在之前写对象的方法
+            let obj = {
+                id:1,
+                name:'xpf',
+                address:'安徽省',
+                sayAddress:function(){
+                    console.log('my address is',this.address);
+                }
+            }
+            let {sayAddress} = obj;
+            obj.sayAddress(); // my address is 安徽省
+            console.log(sayAddress);
+        
+        ES6的简写
+            let obj = {
+                id:1,
+                name:'xpf',
+                address:'安徽省',
+                sayAddress(){
+                    console.log('my address is',this.address);
+                }
+            }
+            let {sayAddress} = obj;
+            obj.sayAddress(); // my address is 安徽省
+            console.log(sayAddress);
+
+        注意：
+            对象中简写的方法不能够当作构造函数，否则会报错
+            let obj = {
+                id:1,
+                name:'xpf',
+                address:'安徽省',
+                sayAddress(){
+                    console.log('my address is',this.address);
+                }
+            }
+            let {sayAddress} = obj;
+            new sayAddress(); // sayAddress is not a constructor
+
+    3) 构造函数的扩展 Object.xxx
+        var obj = new Object();
+        obj     实例
+        Object  构造函数
+        Object.prototype   构造函数的原型
+
+        实例能够调用构造函数原型中的方法，但是无法调用构造函数中的方法
+
+        1. Object.is(value1,value2)
+            判断两个值是否相等
+            var res1 = Object.is(1,1);
+            var res2 = Object.is(1,'1');
+            var res3 = Object.is('1','1');
+            var res4 = Object.is({},{});
+            var res5 = Object.is(+0,-0);
+            var res6 = Object.is(NaN,NaN);
+
+            console.log(res1); // true
+            console.log(res2); // false
+            console.log(res3); // true
+            console.log(res4); // false
+            console.log(res5); // false
+            console.log(res6); // true
+
+            与 === 类似，会进行数据类型的比较，但是也有不同
+                1、NaN使用Object.is判断的时候，等于自身
+                2、+0和-0使用Object.is判断时，不相等
+        
+        2. Object.assign(target,source1,source2...)
+            将所有可枚举属性的值从一个或多个源对象复制到目标对象中，并且返回目标对象
+                可枚举：一般指用户自己写的属性，不包含继承的属性
+                源对象：source1,source2...
+                目标对象：target
+
+            1、合并对象
+                let obj1 = {
+                    id:1
+                }
+                let obj2 = {
+                    name:'xpf'
+                }
+                let obj3 = {
+                    gender:'male'
+                }
+
+                let obj = Object.assign(obj1,obj2,obj3);
+
+                console.log('obj',obj); // { id: 1, name: 'xpf', gender: 'male' }
+                console.log('obj1',obj1); // { id: 1, name: 'xpf', gender: 'male' }
+
+                此时，obj1是目标对象，obj2和obj3是源对象
+                合并后目标对象自身也会改变
+
+                注意：当合并的对象具有相同的属性名时，属性会被源对象当中具有相同属性名的值覆盖掉
+                    let obj1 = {
+                        id:1
+                    }
+                    let obj2 = {
+                        name:'xpf'
+                    }
+                    let obj3 = {
+                        name:'male'
+                    }
+                    let obj = Object.assign(obj1,obj2,obj3);
+                    console.log('obj',obj); // { name: 'male', id: 1 }
+
+            2、复制对象(克隆)
+                let obj1 = {
+                    name:'tom',
+                    age:13,
+                    gender:'male'
+                }
+
+                let obj = Object.assign({},obj1);
+
+                console.log(obj); // { name: 'tom', age: 13, gender: 'male' }
+                console.log(obj1); // { name: 'tom', age: 13, gender: 'male' }
+                console.log(obj == obj1); // false
+
+                案例：
+                一、当源对象中某一个属性值为对象时(即对象嵌套对象)
+                    let obj1 = {
+                        name:'tom',
+                        address:{
+                            province:'安徽省',
+                            city:'合肥市'
+                        }
+                    }
+
+                    let obj2 = {
+                        name:'tom',
+                        address:{
+                            province:'江苏省'
+                        }
+                    }
+                    let obj = Object.assign(obj1,obj2);
+
+                    console.log(obj); // { name: 'tom', address: { province: '江苏省' } }
+                    
+                    并不会出现如下所期望的结果
+                    address:{
+                        province:'江苏省',
+                        city:'合肥市'
+                    }
+                    也就是说，obj1中的address是被完全替换掉的，这个现象叫做浅拷贝，
+                    如果需要实现深拷贝，可以使用JSON.stringify或者第三方库(lodash)
+
+                    let obj1 = {
+                        name:'tom',
+                        address:{
+                            province:'安徽省',
+                            city:'合肥市'
+                        }
+                    }
+
+                    let obj2 = obj1;
+                    let obj3 = JSON.parse(JSON.stringify(obj1));
+                    let obj4 = Object.assign({},obj1);
+
+                    obj1.address.city = '苏州市';
+
+                    console.log('obj1',obj1); // 苏州市
+                    console.log('obj2',obj2); // 苏州市
+                    console.log('obj3',obj3); // 合肥市
+                    console.log('obj4',obj4); // 苏州市
+
+                    注意：如果对象中包含方法，使用JSON.stringify时，该方法会丢失
+                    let obj1 = {
+                        name:'tom',
+                        address:{
+                            province:'安徽省',
+                            city:'合肥市',
+                            sayAddress(){
+                                console.log(111);
+                            }
+                        }
+                    }
+                    let obj3 = JSON.parse(JSON.stringify(obj1));
+                    console.log(obj3); // { name: 'tom', address: { province: '安徽省', city: '合肥市' } }
+
+        3. Object.setPrototypeOf(obj,prototype)
+            将一个对象的原型(prototype)设置到另一个对象obj中
+        
+        4. Object.getPrototypeOf(obj)
+            获取一个对象的原型(prototype)
+            
+            function Person(name){
+                this.name = name;
+            }
+
+            Person.prototype.sayName = function(){
+                console.log('你好');
+            }
+
+            var p1 = new Person();
+            p1.sayName();
+
+            function Dog(){
+
+            }
+            //ES5解决方案：子构造函数的原型指向父构造函数的实例，需要在实例创建之前
+            //Dog.prototype = new Person();
+            var dog1 = new Dog();
+            //ES6解决方案：Object.setPrototypeOf
+            Object.setPrototypeOf(dog1,Person.prototype);
+            dog1.sayName();
+
+            var res = Object.getPrototypeOf(dog1);
+            console.log(res); // Person { sayName: [Function] }
+
+        5. Object.keys(obj)
+            键
+            返回一个对象obj的可枚举属性名组成的数组
+        6. Object.values(obj)
+            值
+            返回一个对象obj的可枚举属性值组成的数组
+        7. Object.entries(obj)
+            键值对
+            返回一个对象obj的可枚举属性的键值对数组
+        
+            let obj = {
+                name:'xpf',
+                age:25,
+                gender:'male'
+            }
+
+            console.log(Object.keys(obj)); // [ 'name', 'age', 'gender' ]
+            console.log(Object.values(obj)); // [ 'xpf', 25, 'male' ]
+            console.log(Object.entries(obj)); // [ [ 'name', 'xpf' ], [ 'age', 25 ], [ 'gender', 'male' ] ]
+        
+            用途：将一个对象转换为Map集合
+                let obj = {
+                    name:'xpf',
+                    age:25,
+                    gender:'male'
+                }
+
+                //let map = new Map(obj); // 直接放进去会报错
+                let map = new Map(Object.entries(obj));
+                console.log(map);
+
+5、函数的扩展
+    1) 函数简写
+        1. 函数声明在对象中
+            let obj = {
+                name:'xpf',
+                sayName:function(){
+                    console.log(1);
+                }
+            }
+            ===>等价于
+            let obj = {
+                name:'xpf',
+                sayName(){
+                    console.log(1);
+                }
+            }
+
+        2. 函数声明在参数中(回调函数/匿名函数)
+            forEach(function(){})
+            setInterval(function(){},1000)
+
+            ES6中允许使用箭头 => 定义函数  
+                function(){}
+                ===>等价于
+                ()=>{}
+            
+            let fun1 = function(item){
+                return item;
+            }
+            let fun2 = item => item;
+
+            console.log(fun1);
+            console.log(fun2);
+
+            箭头函数可以根据参数个数来省略()，可以根据函数体内部代码的行数来省略{}
+                一个参数时，可以省略()
+                    item => {}
+                不要参数或者多个参数时，不可以省略()
+                    () => {}
+                    (item,index) => {}
+
+                函数体内部只有一行代码的时候，可以省略{}
+                多行代码时，不可以省略{}
+
+            案例一：
+                let arr = [{
+                    name:'xpf',
+                    gender:'male'
+                },{
+                    name:'tom',
+                    gender:'male'
+                },{
+                    name:'xiaohong',
+                    gender:'female'
+                }]
+
+                let res1 = arr.filter(function(item){
+                    return item.gender == 'female';
+                })
+
+                let res2 = arr.filter( (item)=>{
+                    return item.gender == 'female';
+                } )
+                console.log(res1);
+                console.log(res2);
+
+            案例二：
+                let obj = {
+                    name:'xpf',
+                    age:25,
+                    sayName:()=>{
+                        console.log(this.name);
+                    },
+                    sayAge:function(){
+                        console.log(this.age);
+                    }
+                }
+                obj.sayName(); // undefined
+                obj.sayAge(); // 25
+
+                注意：箭头函数中的this指向该箭头函数的外部函数
+                    如果箭头函数外部没有函数，那么这个this就只想全局对象
+
+            案例三：
+                let obj = {
+                    list:[1,2,3,4],
+                    add(){
+                        this.list.forEach(function(){
+                            console.log(this.list); // undefined
+                        })
+                    }
+                }
+                obj.add();
+
+                解决方案一：手动更改this
+                    let obj = {
+                        list:[1,2,3,4],
+                        add(){
+                            var that = this;
+                            this.list.forEach(function(){
+                                console.log(that.list)
+                            })
+                        }
+                    }
+                    obj.add();
+
+                解决方案二：使用箭头函数
+                    let obj = {
+                        list:[1,2,3,4],
+                        add(){
+                            this.list.forEach(()=>{
+                                console.log(this.list)
+                            })
+                        }
+                    }
+                    obj.add();
+
+                    箭头函数的this先指向了外部的add函数，由于add函数被obj对象调用，所有add方法中的this指向了obj
+                    最终，箭头函数中的this指向了obj
+
+    2) 函数参数的默认值
+        在ES6之前，一般无法为函数的参数提供默认值
+            function sayName(name,age,gender){
+                console.log(gender); // undefined
+            }
+            sayName(name,age)
+
+            如何设置默认值？
+                function person(name,age){
+                    age = age || 15;
+                    console.log(name,age);
+                }
+                person('xpf'); // xpf 15
+                person('xpf',25); // xpf 25
+                person('xpf',''); // xpf 15
+
+        在ES6时，可以使用解构给函数参数提供默认值
+            function sayName({name,age,gender='male'}){
+                console.log(gender); // male
+            }
+            sayName({name,age})
+        
+        应用：
+            1、ajax参数默认
+            2、可以规定函数必须要传递某一个参数(即该参数不可省略)
+                function throwErr(){
+                    throw new Error('该参数不可被省略！')
+                }
+
+                function sayName({name = throwErr,age}){
+                    console.log(name,age);
+                }
+
+                sayName({name:'xpf',age:25}); // xpf 25
+                sayName({name:'xpf'}); // xpf undefined
+                sayName({age:25}); // 抛出错误 25
+
+
+

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编程式导航</title>
+    <!-- 引入vue -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+    <!-- 引入路由 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue-router/3.2.0/vue-router.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 6、通过事件实现路由的跳转 -->
+        <router-link to='/category'>栏目管理</router-link>
+        <router-link to='/orders'>订单管理</router-link>
+        <!-- 5、路由出口,路由匹配到的组件将渲染在这里 -->
+        <router-view></router-view>
+    </div>
+    <script>
+        // 1、定义组件：组件一
+        let Category = {
+            template:`<div>栏目页面</div>`
+        }
+
+        let Orders = {
+            template:`
+            <router-link to='/orders/all'>所有订单</router-link>
+            `
+            
+        }
+        let OrderAll = {
+          template:`<div>所有订单</div>`
+        }
+        // 2、创建router实例 
+        let router = new VueRouter({
+            // 3、定义路由
+            routes:[{
+                path:'/category',
+                component:Category
+            },{
+                path:'/orders',
+                component:Orders,
+                children:[
+                  {
+                    path:'/all',
+                    component:OrderAll
+                  }
+                ]
+            }]
+        })
+        new Vue({
+            el: '#app',
+            // 4、将router注入到根组件
+            router,
+            methods:{
+               
+            }
+        })
+    </script>
+</body>
+
+</html>

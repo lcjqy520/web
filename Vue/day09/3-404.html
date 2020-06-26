@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>匹配所有路由</title>
+    <!-- 引入vue -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+    <!-- 引入路由 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue-router/3.2.0/vue-router.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 6、实现路由的跳转，router-link的本质是a标签的跳转 -->
+        <router-link to='/category'>栏目管理</router-link>
+        <router-link to='/article'>文章管理</router-link>
+        <!-- 5、路由出口,路由匹配到的组件将渲染在这里 -->
+        <router-view></router-view>
+    </div>
+    <script>
+        // 1、定义组件：组件一
+        let Category = {
+            template:`<div>栏目管理页面</div>`
+        }
+        // 组件二 —— article是一个关键字，所以不能用
+        let Articles = {
+            template:`<div>文章管理页面</div>`
+        }
+        // 组件三：404页面
+        let Default = {
+            template:`<div>404页面</div>`
+        }
+        // 2、创建router实例 
+        let router = new VueRouter({
+            // 3、定义路由
+            routes:[{
+                path:'/category',
+                component:Category
+            },{
+                path:'/article',
+                component:Articles
+            },{
+                path:'*',
+                component:Default
+            }]
+        })
+        new Vue({
+            el: '#app',
+            // 4、将router注入到根组件
+            router
+        })
+    </script>
+</body>
+
+</html>

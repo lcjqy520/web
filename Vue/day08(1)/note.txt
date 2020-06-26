@@ -1,0 +1,196 @@
+复习
+    1、作用域插槽
+    2、脚手架
+        1) 安装环境：nodejs8.9+
+        2) 安装脚手架生成工具
+            > cnpm install -g @vue/cli
+            > vue --version
+        3) 通过脚手架创建项目
+            > vue create app01
+                手动 muanlly
+                babel
+                package.json
+                N
+        4) 安装依赖(如果创建项目的时候，已经下载好了node_modules包，则跳过此步骤)
+            > cd app01
+            > cnpm install
+        5) 运行项目
+            > npm run serve 或者 yarn serve
+
+    3、动态组件
+        <keep-alive>
+            <componet :is="Article"></componet>
+        </keep-alive>
+学习
+    4、渲染函数
+        渲染函数的出现是给编程者提供操作dom的底层接口，一般情况下，不操作dom就可以实现大部分效果，但是也有一些特殊情况，比如说在vue中使用图表(echarts)、地图
+        html中echarts   (基于dom)
+        vue中echarts    (基于vue -> 渲染函数)
+
+        1) 语法
+            render:function(createElement){
+                return createElement('div',this.msg)
+            }
+            通过渲染函数创建一个div标签，内容为this.msg
+            ===>等价于
+            <div>{{msg}}</div>
+
+            两种情况下，msg的改变都会引起Vue页面的更新
+
+            注意：createElement创建出来的其实不是一个实际的 DOM 元素。它更准确的名字可能是 createNodeDescription，因为它所包含的信息会告诉 Vue 页面上需要渲染什么样的节点，包括及其子节点的描述信息。我们把这样的节点描述为'虚拟节点 (virtual node)'，也常简写它为'VNode'
+
+        2) createElement参数
+            第一个参数(不可省略)
+                String  html标签名
+
+                render:function(createElement){
+                    return createElement('h1')
+                }
+            第二个参数(可选)
+                Object  属性的数据对象
+
+                return createElement('h2',{
+                    // 添加类名
+                    'class':{
+                        one:true
+                    },
+                    // 添加样式
+                    style:{
+                        color:'red',
+                        'background-color':'#ccc',
+                        fontSize:'40px'
+                    },
+                    // 添加普通属性
+                    attrs:{
+                        id:'xpf',
+                        name:'vue'
+                    },
+                    // 添加事件
+                    on:{
+                        click:this.clickHandler
+                    }
+                },this.msg)
+            第三个参数(可选)
+                String
+                
+                render:function(createElement){
+                    return createElement('h1','hello vue')
+                }
+
+                render:function(createElement){
+                    return createElement('h1',this.msg)
+                }
+                data(){
+                    return {
+                        msg:'hello vue'
+                    }
+                }
+
+            
+            render:function(createElement){
+                return createElement(String,Obejct,String)
+            }
+
+            render:function(createElement){
+                return createElement('h1',{
+                    attrs:{
+                        id:'one'
+                    }
+                },'hello vue')
+            }
+
+        3) 注意
+            1、通过render函数渲染出来的元素，可以在mounted中获取，在created中获取不到
+                created(){
+                    // alert('created')
+                    console.log('created',this.$refs.myRef) // undefined
+                },
+                mounted(){
+                    // alert('mounted')
+                    console.log('mounted',this.$refs.myRef) // h1
+                },
+
+            2、当data中的值发生改变时，通过渲染函数渲染出来的元素会在页面上更新
+            
+            3、#app指的是，public/index.html中的id为app的div
+                new Vue({
+                    render: h => h(App),
+                }).$mount('#app')
+
+        案例：在vue项目中使用echarts图表
+            参考：app01
+    
+    5、style与class
+        参考：1-style.html、2-class.html
+    
+    6、使用vue-cli完成看点资讯(登录、文章管理、栏目管理)
+        1) 技术栈
+            vue-cli 
+            vue + jQuery(ajax) + element-ui
+        2) 安装第三方库
+            1. 通过script标签引入
+                地图、图表、jQuery
+            2. 通过npm引入
+                vue生态
+                vueRouter、vuex、element-ui
+        3) 项目搭建
+            1. 通过脚手架创建项目
+            2. 在public/index.html引入jQuery
+            3. 安装element-ui
+                1、通过npm安装
+                    > cnpm i element-ui -S
+                    配置main.js，把原先的内容全删掉，复制下面的代码
+                    import Vue from 'vue';
+                    import ElementUI from 'element-ui';
+                    import 'element-ui/lib/theme-chalk/index.css';
+                    import App from './App.vue';
+
+                    Vue.use(ElementUI);
+
+                    new Vue({
+                    el: '#app',
+                        render: h => h(App)
+                    });
+                2、通过vue-cli的插件安装
+                    vue add element
+                    
+            4. 登录
+
+        4) 下载moment第三方库
+            安装moment.js
+                > cnpm install moment --save
+            配置(在需要使用moment的组件内导入)
+                import moment from 'moment'
+
+        5) 打包
+            > npm run build
+            打包完成后会出现一个dist文件夹，将该文件夹部署到云服务器
+                ip/dist/index.html
+                ip/app02/index.html
+            注意：如果打包后无法加载script，则需要删除dist文件夹，在项目根目录下新建vue.config.js文件
+                module.exports = {
+                    publicPath:'./'
+                }
+            然后重新打包
+        
+        6) 对于github上面的项目如何处理
+            1. 克隆
+                > git clone http://github.com/otatoz/app02.git
+            2. 通过vscode开打
+                打开终端
+                > cd app02
+            3. 安装依赖
+                > cnpm install
+                > npm install 
+                > yarn
+
+                vscode终端无法识别cnpm、npm命令
+                    方案一：在vscode终端输入set-ExecutionPolicy RemoteSigned
+                        继续报错，再输入Set-ExecutionPolicy RemoteSigned -Scope Process
+                        重启vscode
+                    方案二：右击vscode的运行文件(.exe) --> 兼容性 --> 以管理员身份运行此程序 --> 应用
+
+            4. 运行项目
+                > npm run serve
+
+        

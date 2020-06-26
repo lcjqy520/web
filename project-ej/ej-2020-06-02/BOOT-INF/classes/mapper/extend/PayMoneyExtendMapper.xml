@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.apps.ej.dao.extend.PayMoneyExtendMapper">
+  <select id="selectAll" resultMap="payMoneyExtendResultMap">
+    select * from pay_money where customer_id=#{customerId};
+  </select>
+  <resultMap id="payMoneyExtendResultMap"
+             extends="com.briup.apps.ej.dao.PayMoneyMapper.BaseResultMap"
+             type="com.briup.apps.ej.bean.extend.PayMoneyExtend">
+  <!--由于继承了BaseResult，所以不用映射id、name...-->
+   <association
+          property="orderLineExtend"
+          column="order_id"
+          select="com.briup.apps.ej.dao.extend.OrderLineExtendMapper.selectByPrimaryKey"
+  />
+  </resultMap>
+
+<!--  <insert id="insert1">-->
+<!--    insert into c_course(id,name,description,credit,teacher_id) values(#{id},#{name},#{description},#{credit},#{teacher_id});-->
+<!--  </insert>-->
+
+<!--  <insert id="insert2">-->
+<!--    insert into c_user(id,realname,gender,username,password,type,status) values(#{id},#{realname},#{gender},#{username},#{password},#{type},#{status});-->
+<!--  </insert>-->
+
+
+<!--  <update id="updateByPrimaryKey" parameterType="com.briup.apps.app01.bean.extend.CourseExtend">-->
+<!--        update c_course set name=#{name},description=#{description},credit=#{credit},teacher_id=#{teacher_id} where id=#{id};-->
+<!--  </update>-->
+
+</mapper>

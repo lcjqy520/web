@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>具名插槽</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <xpf-alert title='警告'>
+            <!-- <h1 slot='footer'>你好</h1>
+            <h3 slot='header'>hello vue</h3> -->
+            <template v-slot:header>
+                <h1>你好</h1>
+                <a href="">删除</a>
+            </template>
+
+            <template v-slot:footer>
+                <h3>hello vue</h3>
+            </template>
+
+            <template>
+                <h5>hello xpf</h5>
+            </template>
+        </xpf-alert>
+    </div>
+    <script>
+        // 全局注册组件
+        Vue.component('xpf-alert',{
+            template:`
+                <div>
+                    <slot name='header'></slot>
+                    {{title}}
+                    <slot></slot>
+                    <slot name='footer'></slot>
+                </div>
+            `,
+            props:['title']
+        })
+
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

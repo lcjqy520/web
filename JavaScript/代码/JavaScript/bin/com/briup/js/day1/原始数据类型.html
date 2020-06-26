@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>原始数据类型</title>
+</head>
+<body>
+	<script type="text/javascript">
+   /*
+	* 1.在js中，变量名可以重复声明，后一个会将前一个的值覆盖掉。
+	* 2.变量如果要使用，一定要先声明。
+	*/
+		//number
+		var a = 10;
+		document.write(a+"---"+typeof(a)+"<br>");
+		var a = 11.1;
+		document.write(a+"---"+typeof(a)+"<br>");
+		var a2 = NaN;
+		document.write(a2+"---"+typeof(a2)+"<br>");
+		
+		//string
+		let str1 = "这里是文字";
+		let str2 = 'abcd';
+		document.write(str1+"<br>");
+		document.write(str2+"---"+typeof(str2)+"<br>");
+		
+		//boolean
+		var flag = true;
+		document.write(flag+"---"+typeof(flag)+"<br>");
+		
+		//null
+		var Array = null;
+		document.write(Array+"---"+typeof(Array)+"<br>");
+		
+		//undefined
+		a = "文字";
+		document.write(a+"<br>");
+		a = true;
+		document.write(a+"<br>");
+		var c;
+		document.write(c+"---"+typeof(c)+"<br>");
+		
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+

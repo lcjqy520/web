@@ -1,0 +1,443 @@
+@font-face {
+  font-family: 'iconfont';  /* project id 1743373 */
+  src: url('https://at.alicdn.com/t/font_1743373_0pmn1hmqh3wj.eot');
+  src: url('https://at.alicdn.com/t/font_1743373_0pmn1hmqh3wj.eot?#iefix') format('embedded-opentype'),
+  url('https://at.alicdn.com/t/font_1743373_0pmn1hmqh3wj.woff2') format('woff2'),
+  url('https://at.alicdn.com/t/font_1743373_0pmn1hmqh3wj.woff') format('woff'),
+  url('https://at.alicdn.com/t/font_1743373_0pmn1hmqh3wj.ttf') format('truetype'),
+  url('https://at.alicdn.com/t/font_1743373_0pmn1hmqh3wj.svg#iconfont') format('svg');
+}
+body,ul{
+  margin: 0;
+  padding: 0;
+}
+ul{
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+.wrapper {
+  width: 1210px;
+  margin:0 auto ;
+  background-color:rgb(207, 34, 16);
+}
+.wrapper::after{
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/* 头部 */
+.header {
+  background-color: #333333;
+}
+.header .wrapper {
+  background-color: #333333;
+  color: #f4f4f4;
+  height: 50px;
+  line-height: 50px;
+}
+.header .wrapper::after {
+  content: "";
+  clear: both;
+  display: block;
+}
+
+.header .wrapper > ul {
+  float: right;
+}
+.header .wrapper > ul > li{
+  float: left;
+  margin-left: 10px;
+  position: relative;
+}
+.header .wrapper > ul > li:last-child {
+  margin-right: 60px;
+}
+.header .wrapper >ul > li:last-child::before {
+  font-family: "iconfont";
+  content: "\e759";
+}
+.header .wrapper > ul > li:not(:last-child)::after{
+  content: "";
+  display: inline-block; 
+  height: 16px;
+  border-left: 1px solid #999999;
+  margin: 0 5px;
+  vertical-align: middle;
+}
+.header .wrapper > ul > li a {
+  color: whitesmoke;
+}
+.header .wrapper > ul >li div{
+  display: none;
+  position: absolute;
+  border: 1px solid gainsboro;
+  background-color: whitesmoke;
+  line-height: 40px;
+  width: 80px;
+}
+.header .wrapper > ul div .sj {
+  height: 10px;
+  width: 10px;
+  background-color: red;
+}
+.header .wrapper > ul >li div li {
+  text-align: center;
+}
+.header .wrapper > ul >li div li:not(:last-child) {
+  border-bottom: gray solid 1px;
+}
+.header .wrapper > ul  div li a{
+  color: gray;
+}
+.header .wrapper > ul li span::after{
+  font-family: "iconfont";
+  content:"\e658";
+}
+.header .wrapper >ul >li:nth-child(5):hover .div_list1 {
+  display: block;
+}
+.header .wrapper >ul >li:nth-child(6):hover .div_list2 {
+  display: block;
+}
+.top .wrapper {
+  margin: 10px auto 20px auto;
+  background-color:white;
+}
+.top .wrapper::after{
+  content: "";
+  display: block;
+  clear: both;
+}
+.top .top_content {
+  width: 1000px;
+  margin:0 auto;   
+  padding-bottom: 20px;
+}
+.top .top_content::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.top .top_content li{
+  height: 90px;
+  margin-top: 30px;
+  
+}
+.top .top_content li:nth-child(1) {
+  width: 212px;
+  float: left;
+  margin-left: 10px;
+}
+.top .top_content li .logo{
+  background-image: url("../images/pics.png");
+  background-position: 0 -298px;
+  width: 212px;
+  height: 60px;
+}
+
+.top .top_content input[type=text] {
+  height: 40px;
+  width: 400px;
+  border-top-left-radius:30px;
+  border-bottom-left-radius: 30px;
+  border: goldenrod solid 1px;
+  float: left;
+  font-family: iconfont;
+  box-sizing: border-box;
+  text-indent: 2em;
+}
+.top .top_content input[type=button] {
+  height: 40px;
+  width: 60px;
+  border-top-right-radius:30px;
+  border-bottom-right-radius: 30px;
+  border: goldenrod solid 1px;
+  float: left;
+  background-color: goldenrod;
+  cursor: pointer;
+}
+.top .top_content .gouwuche {
+  width: 150px;
+  height: 40px;
+  color: goldenrod;
+  border: goldenrod solid 1px;
+  border-radius: 30px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+.top .top_content .gouwuche .gouwu_num {
+  display: inline-block;
+  height: 19px;
+  width: 19px;
+  background-image: url("../images/pics.png");
+  background-position: 0 -51px;
+  line-height: 19px;
+}
+.top .top_content li:nth-child(2) {
+  width: 500px;
+  margin-left:50px ;
+  float: left;
+}
+.top .top_content li:nth-child(3) {
+  width: 200px;
+  float: left;
+}
+.top .top_list {
+  width: 1000px;
+  margin:0 auto;   
+  padding-bottom: 10px;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+.top .top_list::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.top .top_list li {
+  width: 80px;
+  height: 20px;
+  float: left;
+}
+.top .top_list li:not(:first-child){
+  margin-left: 12px;
+}
+.top .top_list li a {
+  color: black;
+}
+.top .top_list li a:hover {
+  color: goldenrod;
+  text-decoration: underline 3px;
+}
+
+
+/* 广告 推荐 */
+.neirong {
+  padding-bottom: 30px;
+  background-color: rgb(207, 34, 16);
+  text-align: center;
+}
+.neirong .guanggao{
+  width: 1349px;
+  height: 300px;
+  margin: 0 auto;
+}
+
+.neirong .guanggao img {
+  height: 100%;
+  width: 100%;
+}
+.neirong .tuijian {
+  width: 1210px;
+  background-color: rgb(207, 34, 16);
+  margin: 100px auto 0px auto;
+}
+.neirong .tuijian::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.neirong .tuijian li {
+  width: 180px;
+  height: 200px;
+  float: left;
+}
+.neirong .tuijian li img {
+  width: 100%;
+  height: 100%;
+}
+.neirong .tuijian li:not(:first-child) {
+  margin-left: 26px;
+}
+
+/* 每日特惠 */
+.tehui {
+  background-color: rgb(207, 34, 16);
+  padding-top: 150px;
+}
+.tehui .wrapper {
+  background-color: #ffe6c5;
+  height: 500px;
+  padding-top: 150px;
+}
+.tehui .wrapper ul::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.tehui .wrapper li{
+  height: 350px;
+  width: 280px;
+  background-color: white;
+  float: left;
+  margin-left: 18px;
+  text-align: center;
+}
+.tehui .wrapper li:last-child {
+  margin-right: 18px;
+}
+.tehui .wrapper li .jiage {
+  color: rgb(207, 34, 16);
+  text-align: center;
+  font-size: 20px;
+}
+.tehui .wrapper li .jiage font:last-child {
+  color: gray;
+  text-decoration: line-through;
+  font-size: 15px;
+}
+.tehui .wrapper li button {
+  border: 1px solid rgb(207, 34, 16);
+  color: rgb(207, 34, 16);
+  height: 30px;
+}
+
+
+/* 产品 */
+.products {
+  background-color: rgb(207, 34, 16);
+  padding-top: 100px;
+}
+.products .wrapper {
+
+}
+.products ul::after {
+  content:"";
+  display: block;
+  clear:both;
+}
+.products ul > li{
+  height: 350px;
+  width: 280px;
+  float: left;
+  margin-right: 30px;
+}
+.products ul > li:nth-child(4n) {
+  margin-right: 0;
+}
+.products ul > li:nth-child(n+5) {
+  margin-top: 10px;
+}
+.products ul > li{
+  background-color: whitesmoke;
+  text-align: center;
+}
+.products .wrapper li .jiage {
+  color: rgb(207, 34, 16);
+  text-align: center;
+  font-size: 20px;
+}
+.products .wrapper li .jiage font:last-child {
+  color: gray;
+  text-decoration: line-through;
+  font-size: 15px;
+}
+.products .wrapper li .goumai {
+  text-align: center;
+  height: 32px;
+  line-height: 32px;
+}
+.products .wrapper li .goumai::after{
+  content: "";
+  display: block;
+  clear: both;
+}
+.products .wrapper li div a:first-child{
+  display: inline-block;
+  border: 1px solid rgb(207, 34, 16);
+  background: rgb(207, 34, 16);
+  height: 30px;
+  width: 100px;
+  line-height: 30px;
+  color: whitesmoke;
+  float: left;
+  margin-left: 25%;
+  margin-right: 20px;
+}
+.products .wrapper li div img {
+  display: inline-block;
+  height: 32px;
+  width: 32px;
+  float: left;
+}
+
+
+
+
+/* 心动 */
+.xindong {
+  background-color: rgb(207, 34, 16);
+  padding-top: 100px;
+}
+
+.xindong .wrapper {
+  background-color: rgb(206, 150, 47);
+  padding: 100px 10px;
+}
+.xindong li{
+  height: 350px;
+  width: 280px;
+  float: left;
+  margin-left: 30px;
+  background-color: whitesmoke;
+  margin-top: 10px;
+  text-align: center;
+}
+.xindong li:nth-child(1),
+.xindong li:nth-child(2) {
+  height: 250px;
+  width: 575px;
+  float: left;
+  margin-left: 60px;
+  margin-top: 0;
+}
+.xindong li:first-child,
+.xindong li:nth-child(3){
+  margin-left: 0;
+}
+.xindong li:last-child {
+  margin-right: 0;
+}
+.xindong li .youhui::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.xindong li .youhui div {
+  width: 191px;
+  height: 250px;
+  background-color: whitesmoke;
+  float: left;
+  text-align: center;
+}
+.xindong li .youhui div .neirong {
+  margin-top: 100px;
+  height: 100px;
+}
+.xindong li div .neirong span {
+  font-size: 20px;
+}
+.xindong li div .neirong span:last-child {
+  color: rgb(207, 34, 16);
+}
+.xindong li .youhui div:not(:first-child) {
+  margin-left: 1px;
+}
+.xindong li .youhui div img {
+  width: 191px;
+  margin-top: 20px;
+}
+.xindong li .jiage {
+  color: rgb(207, 34, 16);
+  text-align: center;
+  font-size: 30px;
+}
+.xindong li .jiage font:last-child {
+  color: gray;
+  text-decoration: line-through;
+  font-size: 20px;
+}

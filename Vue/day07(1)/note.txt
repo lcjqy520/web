@@ -1,0 +1,212 @@
+复习
+    1、高级组件
+        1) 基础组件
+            1. 注册
+                Vue.component('xpf-div',{
+                    template:`<div>hello vue--{{msg}}--{{title}}</div>`,
+                    data(){
+                        return {
+                            msg:'hello'
+                        }
+                    },
+                    props:['title'],
+                    methods:{
+                        find(){
+                            console.log(this.msg)
+                            console.log(this.title)
+                        }
+                    }
+                })
+            2. 调用
+                <xpf-div title='hello xpf'></xpf-div>
+                <xpf-div></xpf-div>
+            
+            请类比函数的声明和调用
+
+        2) 组件参数
+            props:{
+                期望接受的参数:该参数的数据类型
+            }
+
+            1、注册
+                Vue.component('xpf-div',{
+                    template:`<div v-if='visible'>hello vue--{{msg}}--{{title}}</div>`,
+                    data(){
+                        return {
+                            msg:'hello'
+                        }
+                    },
+                    props:{
+                        title:String,
+                        visible:Boolean
+                    }
+                })
+            2、调用
+                <xpf-div title='hello vue'></xpf-div>
+                <xpf-div title='hello vue' :visible='true'></xpf-div>
+                ==>
+                <xpf-div title='hello vue' :visible='ifVisible'></xpf-div>
+                data(){
+                    return {
+                        ifVisible:true
+                    }
+                }
+            3、参数验证
+                props:{
+                    期望接受的参数:{
+                        type:该参数的数据类型,
+                        required:true/false
+                    }
+                }
+
+                xpf-div
+                props:{
+                    title:String,
+                    visible:{
+                        type:Boolean,
+                        required:true
+                    }
+                }
+                在调用子组件xpf-div的时候，必须传递一个数据类型为布尔值的visible，一旦省略，就会报错
+        
+        3) 单向数据流
+            父组件      --->        子组件
+            visible                v-if='visible'
+                true                显示
+                false               隐藏
+            
+            vue中期望子组件将父组件传递过来的参数，放到data或者computed中，再进行改变
+
+            案例：父组件向子组件传递日期，子组件改变日期格式
+            
+        4) 自定义事件
+            父组件      <---        子组件
+              @xxx=''               this.$emit('xxx')
+            子组件在触发某一个事件的时候，会向父组件发射事件，通知父组件进行监听
+            
+            案例：弹框的显示和隐藏
+
+    2、插槽
+        1) 默认插槽
+            1、注册
+                xpf-div
+                template:`
+                    <div>
+                        {{title}}
+                        <slot></slot>
+                    </div>
+                `,
+                props:['title']
+            2、调用
+                <xpf-div title='hello'>
+                    <h1>hello xpf</h1>
+                </xpf-div>
+            
+                子组件的开始标签与结束标签之间的内容会插入到slot中，即slot会被替换成子模版
+
+        2) 具名插槽
+            1、注册
+                xpf-div
+                template:`
+                    <div>
+                        {{title}}
+                        <slot name='header'></slot>
+                        <slot name='footer'></slot>
+                    </div>
+                `,
+                props:['title']
+            2、调用
+                <xpf-div title='hello'>
+                    <template v-slot:footer>
+                        <h1>hello xpf</h1>
+                    </template>
+                    <template v-slot:header>
+                        <h2>hello xpf</h2>
+                    </template>
+                </xpf-div>
+
+学习    
+        3) 作用域插槽
+            1、组件的注册
+                xpf-div
+                    template:`
+                        <div>
+                            <ul>
+                                // 由于子组件不知道父组件传递过来的数据中具体的属性，所以可以将item回调给父组件(暴露在插槽的作用域上)
+                                <li v-for='item in data'>
+                                    <slot name='list' :scope='item'></slot>
+                                </li>
+                            </ul>
+                        </div>
+                    `,
+                    props:{
+                        data:Array
+                    }
+            2、组件的调用
+                <xpf-div :data='category'>
+                    <template v-slot:name='slot'>
+                        <div>{{slot.scope.id}}</div>
+                        <div>{{slot.scope.name}}</div>
+                        <div>{{slot.scope.comment}}</div>
+                    </template>
+                </xpf-div>
+             
+                注意：
+                    1. 子组件中的:scope是当前插槽的作用域，scope变量可以是任意其他变量
+                    2. 父组件中v-slot='slot'，引号中的slot用于接收子组件插槽作用域中的数据，也可以任意改变
+                    3. 如果为默认组件(不是具名组件)，在调用的时候v-slot='slot'即可
+            
+            3、案例
+                在element-ui的表格中
+                1. 图片显示
+                2. 显示开关
+                3. 删除/修改
+    
+    3、脚手架
+        1) 项目结构搭建(前端结构)
+            1. 手动搭建
+                index.html
+                css
+                js
+                images
+
+                1、js不能够模块化，不利于分工协作，效率低下
+                2、有些第三方库只提供脚手架的形式(npm)
+
+            2. 脚手架(盖房子)
+                特别厉害的架构师给我们搭建一个项目结构，我们在这个结构上面进行开发
+                脚手架涉及的内容
+                    babel   es6  -->  es5  -->  运行在浏览器上
+                    webpack 构建工具
+                        将开发好的各个模块整合到一起
+                        之前组件封装的时候，对于css很难掌控，但是webpack可以做到
+                    开发过程：
+                        项目的初始化 -> 写代码 -> 测试 -> 打包 -> 部署(阿里云)
+
+        2) 脚手架
+            vue -> html + css + js -> 运行在浏览器
+
+            环境：Node.js 8.9 或更高版本 (推荐 8.11.0+)
+                nodejs下载：http://nodejs.cn/download/
+                cnpm下载：npm install -g cnpm --registry=https://registry.npm.taobao.org
+
+            1. 应用
+                1、安装脚手架生成工具
+                    > cnpm install -g @vue/cli 或者 npm install -g @vue/cli
+                    > vue --version
+                2、通过脚手架创建项目
+                    # 进入一个没有中文字符的文件夹
+                    > vue create app01
+                        1. 选择Manaually，回车
+                        2. 选择babel回成
+                        3. 选择in package.json
+                        4. n
+                        5. cd app01
+                        6. npm run serve
+                        7. 浏览器访问http://localhost:8080/
+            2. 项目结构
+            3. 项目运行流程
+            4. 项目文件介绍
+            5. 使用
+
+

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.apps.ej.dao.extend.ASystemExtendMapper">
+
+  <select id="query" resultMap="com.briup.apps.ej.dao.AccountSystemMapper.BaseResultMap">
+    select *
+    from account_system As a
+    <where>
+      <if test="accountSystem.money != null">
+        a.money  like concat('%',#{accountSystem.money},'%')
+      </if>
+      <if test="accountSystem.description != null">
+        AND a.description like concat('%',#{accountSystem.description},'%')
+      </if>
+      <if test="accountSystem.type != null">
+        AND a.type like concat('%',#{accountSystem.type} ,'%')
+      </if>
+    </where>
+    limit ${page*pageSize},${pageSize}
+  </select>
+  <select id="count" resultType="long">
+    select count(*)
+    from account_system AS a
+    <where>
+      <if test="accountSystem.money != null">
+        a.money  like concat('%',#{accountSystem.money},'%')
+      </if>
+      <if test="accountSystem.description != null">
+        AND a.description like concat('%',#{accountSystem.description},'%')
+      </if>
+      <if test="accountSystem.type != null">
+        AND a.type like concat('%',#{accountSystem.type} ,'%')
+      </if>
+    </where>
+  </select>
+</mapper>

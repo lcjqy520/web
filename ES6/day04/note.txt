@@ -1,0 +1,416 @@
+今天
+    map(购物车)、iterator、异步函数
+明天
+    promise、generator、async、class
+
+复习
+    1、rest参数
+        1) 函数参数中
+            function sayName(){
+                console.log(arguments);
+            }
+            function sayAge(a,b,...params){
+                console.log(params);
+            }
+            sayAge(1,2,3);
+            
+            ...变量名 用来接收函数多余的参数
+            rest参数后面不能再接其他参数，即rest参数只能充当函数的最后一个形参
+
+        2) 对象中(剥离)
+            let obj1 = {
+                name:'xpf'
+            }
+            let obj2 = {
+                age:25,
+                gender:'male'
+            }
+
+            let obj = {...obj1,...obj2};
+
+            Object.assign(obj1,obj2);
+            console.log(obj1); 
+            var obj = Object.assign({},obj1,obj2);
+            console.log(obj);
+
+        3) vue中
+            ...mapState();  // vuex状态机 辅助函数
+
+    2、数组的扩展
+        1) Array.from(v)
+            可以将两类对象转换为真正的数组
+                类数组对象
+                可遍历的对象
+
+            1. 只要包含length属性的对象，都可以通过改方法转换为数组
+            2. 参数v是一个数组时，该方法会返回一个一模一样的新数组
+        
+        2) Array.of()
+            弥补Array构造函数的不足
+                var arr = new Array(3); // [<3 empty items>]
+                var arr = Array.of(3); // [3]
+            
+        3) find、findIndex(实例调用)
+            find找到数组中满足条件的第一个元素
+            findIndex找到数组中满足条件的第一个元素的索引
+                弥补indexOf的不足
+        
+        4) fill()
+            将给定的值填充至数组
+        
+        5) keys、values、entries
+            都是会返回一个遍历器对象，服务于for-of循环
+            如何遍历数组？
+                for-in循环
+                for-of
+                    let value_iterator = arr.values();
+                    for(let value of value_iterator){
+
+                    }
+                while()
+        
+        6) includes()
+            找出数组中是否含有某个元素
+    
+    3、Set集合
+        类似于数组，成员不允许重复
+        let set = new Set([1,2,3,4]);
+
+        let set = new Set();
+        let arr = [1,2,3,4];
+        arr.forEach((item)=>{
+            set.add(item);
+        })
+
+        size Set集合的大小
+        add()
+        delete()
+        has()
+        clear()
+        keys()
+        values()
+        entries()
+
+学习
+        1) 应用
+            1. 将Set集合转换为数组 --> Array.from()
+                let set = new Set([1,2,3,4]);
+                console.log(set); // Set { 1, 2, 3, 4 }
+
+                let arr = Array.from(set);
+                console.log(arr); // [1,2,3,4]
+            
+            2. 数组的去重
+                方法一：
+                    indexOf
+                方法二：
+                    function myFun(arr){
+                        let set = new Set(arr);
+                        let array = Array.from(set);
+                        return array;
+                    }
+                    let arr = [1,2,3,3,2,1];
+                    let newArr = myFun(arr);
+                    console.log(newArr); // [1,2,3]
+
+                    ===>简化
+
+                    function myFun(arr){
+                        return Array.from(new Set(arr));
+                    }
+
+                    let arr = [1,2,3,3,2,1];
+                    let newArr = myFun(arr);
+                    console.log(newArr); // [1,2,3]
+
+            3.(拓展) 对Set集合中的元素做一些操作后返回(加减乘除) map
+                let arr = [1,2,3,4];
+                let newArr = arr.map((item)=>{
+                    return item*2;
+                });
+                console.log(newArr); // [2,4,6,8]
+
+                在set集合中实现上述效果
+
+                方法一：
+                    let set = new Set([1,2,3,4]);
+                    let arr = Array.from(set,(item)=>{
+                        return item*2;
+                    })
+                    var newSet = new Set(arr);
+                    console.log(newSet); // Set { 2, 4, 6, 8 }
+
+                方法二：
+                    let set = new Set([1,2,3,4]);
+                    //通过扩展运算符将set集合转换为数组
+                    let arr = [...set];
+                    let res = arr.map((item)=>{
+                        return item*2;
+                    })
+                    let newSet = new Set(res);
+                    console.log(newSet); // Set { 2, 4, 6, 8 }
+
+    4、Map集合
+        JavaScript 的对象，本质上是键值对的集合，但是传统上只能用字符串当作键。这给它的使用带来了很大的限制
+        为了解决这一局限性，ES6引入了Map集合
+
+        1) 定义方式：Map构造函数
+            let map = new Map();
+            console.log(map); // Map {}
+
+        2) 初始化：接受一个数组作为参数。该数组的成员是一个个表示键值对的数组
+            let map = new Map([
+                ['name','xpf'],
+                ['gender','male']
+            ]);
+            console.log(map); // Map { 'name' => 'xpf', 'gender' => 'male' }
+
+            还可以通过set方法向Map集合中设置键值对
+            let map = new Map();
+            map.set('name','xpf');
+            map.set('gender','male');
+            console.log(map); // Map { 'name' => 'xpf', 'gender' => 'male' }
+
+        3) 特点
+            1. 类似于对象，也是键值对的集合
+            2. Object结构提供了'字符串—值'的对应，Map结构提供了'值—值'的对应
+                即Map集合的键不仅仅局限于字符串了
+        
+        4) Map集合的属性
+            Map.prototype.size
+                返回Map集合的成员总数
+
+                let map = new Map();
+                map.set('name','xpf');
+                map.set('gender','male');
+                console.log(map.size); // 2
+
+        5) Map集合的方法
+            Map.prototype.set(key,value)
+                设置键值对，键名为key，键值为value，返回Map集合
+            Map.prototype.get(key)
+                获取key对应的键值，如果找不到，返回undefined
+
+                let map = new Map();
+                map.set('str',1); 
+                map.set(2,1); 
+                map.set(undefined,1); 
+                map.set(function(){},1); 
+
+                如果键名已存在，则键值会更新，否则就会就会生成新的键
+                map.set(2,5);  // {2 => 5}
+
+                console.log(map.get('str')); // 1
+                console.log(map.get('str123')); // undefined
+            
+            Map.prototype.has(key)
+                表示某个键是否属于Map集合，属于时返回true
+            Map.prototype.delete(key)
+                删除某个键，删除成功时返回true
+            Map.prototype.clear()
+                清空Map集合
+            Map.prototype.keys()
+            Map.prototype.values()
+            Map.prototype.entries()
+            Map.prototype.forEach()
+                遍历Map集合中的所有成员
+        
+        6) 应用
+            1. Map集合转换为数组
+                let map = new Map([
+                    [1,2],
+                    [2,3],
+                    [3,4]
+                ]);
+                console.log(map); // { 1 => 2, 2 => 3, 3 => 4 }
+
+                方法一：通过Array.from()
+                    let arr = Array.from(map);
+                    console.log(arr); // [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ] ]
+
+                方法二：...
+                    let map = new Map([
+                        [1,2],
+                        [2,3],
+                        [3,4]
+                    ]);
+                    console.log(map); // { 1 => 2, 2 => 3, 3 => 4 }
+                    let arr = [...map];
+                    console.log(arr); // [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ] ]
+            
+            2. 对象转换为Map集合
+                思路：
+                    Map构造函数的参数需要是二维数组
+                    ->
+                    如何将普通对象转换为二维数组的形式？
+                    ->
+                    Object.entries()可以拿到对象的键值对组成的数组
+                    ->
+                    作为参数传递给new Map();
+                    ->
+                    实现对象转Map集合
+                实现代码：
+                    let obj = {
+                        name:'xpf',
+                        age:25,
+                        gender:'male'
+                    }
+                    let entry = Object.entries(obj);
+                    let map = new Map(entry);
+                    console.log(map);
+            
+            3. 购物车
+                // 1. 初始化购物车
+                let shopCar = new Map();
+
+                // 2. 初始化商品
+                let product_one = {
+                    productId:1,
+                    productName:'雪碧',
+                    productPrice:4.5,
+                    number:1
+                }
+                let product_two = {
+                    productId:2,
+                    productName:'可乐',
+                    productPrice:4.0,
+                    number:1
+                }
+                // 3. 初始化添加至购物车事件
+                function addShopCar(item){
+                    console.log(item,'----');
+                    // 判断该商品是否已经存在于购物车
+                    // 如果有该id，说明已经存在该商品，只需要将该商品的数量改变即可
+                    if(shopCar.has(item.productId)){
+                        shopCar.get(item.productId).number += item.number;
+                    } else {
+                        shopCar.set(item.productId,item);
+                    }
+                }
+                // 4. 购买雪碧
+                addShopCar(product_one);
+                //addShopCar(product_one);
+                //addShopCar(product_one);
+                //addShopCar(product_one);
+                // 再次购买雪碧
+                addShopCar({productId:1,productName:'雪碧',productPrice:4.5,number:3});
+                addShopCar({productId:1,productName:'雪碧',productPrice:4.5,number:1});
+                // 购买可乐
+                addShopCar(product_two);
+
+                console.log(shopCar);
+
+    5、(拓展)Iterator（遍历器）
+        1) 介绍
+            数组、对象、Map和Set四种数据结构，需要一种统一的访问机制
+            遍历器（Iterator）就是这样一种机制。它是一种接口，为各种不同的数据结构提供统一的访问机制。
+            任何数据结构只要部署 Iterator 接口，就可以完成遍历操作。
+
+        2) 作用
+            1. 为各种数据解构提供统一的访问接口
+            2. 使得数据结构的成员能够按某种次序排列
+            3. Iterator接口可以用于for-of循环
+
+        3) next()方法
+            在遍历器对象Iterator中，有一个next方法，该方法会返回一个对象，对象中由两个属性value、done
+            let arr = ['xpf','tom','larry'];
+            let iterator = arr.values();
+            console.log(iterator.next()); // xpf
+            console.log(iterator.next()); // tom
+            console.log(iterator.next()); // larry
+            console.log(iterator.next()); // undefined
+        
+        4) 向类数组对象中添加遍历器
+            获取数组中的values方法
+                console.log(Array.prototype[Symbol.iterator])
+                console.log([][Symbol.iterator])
+
+            let arr_like = {
+                "0":"xpf",
+                "1":"25",
+                "2":"male",
+                length:3,
+                [Symbol.iterator]:[][Symbol.iterator]
+            }
+            console.log(arr_like);
+            for(let val of arr_like){
+                console.log(val);
+            }
+
+            function sayName(a,b){
+                console.log(arguments,'--')
+                for(let arg of arguments){
+                    console.log(arg)
+                }
+            }
+            sayName('xpf','male',25);
+        
+        注意：
+            1. 对于一般对象，就算添加了遍历器接口，也没有效果(不会报错，但是使用for-of遍历出来的值为undefined)
+                let obj = {
+                    name:'xpf',
+                    age:25,
+                    gender:'male',
+                    length:3,
+                    [Symbol.iterator]:[][Symbol.iterator]
+                }
+                for(let val of arr_like){
+                    console.log(val); // undefined undefined undefined
+                }
+                
+            2. Symbol是一个新的数据类型，表示独一无二的值，是第七种数据类型
+                undefined、null、布尔值（Boolean）、字符串（String）、数值（Number）、对象（Object）
+
+                let s = Symbol();
+                console.log(s); // Symbol()
+                console.log(typeof s); // 'symbol'
+
+                注意：
+                    1、Symbol函数不可以使用new关键字，否则会报错
+                    2、通过Symbol创建出来的变量，是独一无二的，这个变量可以用于向对象中添加一个属性，而不影响其他已存在的属性(即不会出现覆盖的情况)
+
+                    向对象中添加symbol
+                        let obj = {
+                            name:'xpf',
+                            age:25,
+                            gender:'male'
+                        }
+                        let symbol1 = Symbol('province');
+                        let symbol2 = Symbol('city');
+                        let symbol3 = Symbol('city');
+                        obj[symbol1] = '安徽';
+                        obj[symbol2] = '合肥';
+                        obj[symbol3] = '苏州';
+                        console.log(obj);
+                        console.log(obj.city); // undefined
+                        console.log(obj['city']); // undefined
+                        console.log(Object.getOwnPropertySymbols(obj));
+
+                        Object.getOwnPropertySymbols(obj)用于获取对象中所有通过symbol添加的属性名
+            
+            3. 获取遍历器
+                数组的遍历器对象
+                    Array.prototype[Symbol.iterator]
+                    [][Symbol.iterator]
+                类数组对象的遍历器对象
+                    arguments[Symbol.iterator]
+
+                    function sayName(a,b,c){
+                        let i = arguments[Symbol.iterator]();
+                        for(let item of i){
+                            console.log(item)
+                        }
+                    }
+                    sayName(1,2,3);
+                    ===>等价于
+                    function sayName(a,b){
+                        console.log(arguments,'--')
+                        for(let arg of arguments){
+                            console.log(arg)
+                        }
+                    }
+                    sayName('xpf','male',25);
+                Set
+                    let set = new Set();
+                    set[Symbol.iterator]
+    Promise

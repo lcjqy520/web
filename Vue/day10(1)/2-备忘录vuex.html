@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>备忘录</title>
+    <!-- 引入vue -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+    <!-- 引入状态机 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vuex/3.2.0/vuex.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+</head>
+<body>
+    <div id='app'>
+        <h3>备忘录</h3>
+        <form @submit.prevent='addMemoHandler'>
+            <input type="text" v-model='msg'>
+            <input type="submit" value="保存">
+        </form>
+        <ul>
+            <li v-for='item in list' :key='item.id'>
+                <span>{{item.id}}</span>
+                <span>{{item.message}}</span>
+                <span>{{item.time}}</span>
+                <a href="" @click.prevent='delMemoHandler(item.id)'>删除</a>
+            </li>
+        </ul>
+    </div>
+    <script>
+        // 1、实例化vuex对象
+        let store = new Vuex.Store({
+            // 1.1 状态，相当于data
+            state:{
+                list:[]
+            },
+            // 1.2 获取函数，相当于computed，可以对state中数据进行过滤
+            getters:{},
+            // 1.3 突变，相当于methods【同步函数】，是vuex中唯一改变state中数据的方式
+            mutations:{
+                // state是系统注入，id才是我们提交突变时传递的第一个参数
+                delMemo(state,id){
+                    state.list = state.list.filter((item)=>{
+                        return item.id != id
+                    })
+                },
+                refreshMemo(state,memo){
+                    state.list.push(memo)
+                }
+            },
+            // 1.4 动作，相当于methods【异步代码】
+            actions:{
+                async addMemo(context,memo){
+                    let res = await $.get('http://39.96.21.48:8099/manager/category/findAllCategory')
+                    memo.message = res.message
+                    // 提交突变
+                    context.commit('refreshMemo',memo)
+                }
+            }
+        })
+
+        new Vue({
+            el:'#app',
+            // 2、将vuex注入到vue实例对象中
+            store,
+            data(){
+                return {
+                    msg:'',
+                    index:1
+                }
+            },
+            computed:{
+                // 2.1 将state中的值进行映射：将state中的list获取到，绑定到计算属性的list上
+                list:function(){
+                    return this.$store.state.list;
+                }
+            },
+            methods:{
+                // 添加
+                addMemoHandler(){
+                    let memo = {
+                        id:this.index,
+                        message:this.msg,
+                        time:new Date()
+                    }
+                    // 分发请求 ---> 调用动作中的方法
+                    this.$store.dispatch('addMemo',memo)
+                    // this.list.push(memo)
+                    this.index++;
+                },
+                // 删除
+                delMemoHandler(id){
+                    // 提交突变 ---> 调用突变中的方法
+                    this.$store.commit('delMemo',id)
+                }
+            }
+        })
+    </script>
+</body>
+</html>

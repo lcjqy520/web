@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        num:{{num}}
+    </div>
+    <script>
+        new Vue({
+            el:'#app',
+            beforeCreate(){
+                // 无法访问vue实例中的data及methods中的方法
+                console.log('beforeCreate',this.num) // undefined
+                alert('beforeCreate')
+            },
+            created(){
+                // vue实例完全创建好了，可以访问到vue实例中的data及methods中的方法
+                // 常用于在页面加载完毕之后，立即查询某些数据(文章列表)
+                console.log('created',this.num)
+                alert('created')
+            },
+            beforeMount(){
+                // 完成了模板的编译(将html转换为dom，vue为我们做)
+                console.log('beforeMounte',this.num)
+                alert('beforeMount')
+            },
+            mounted(){
+                // 完成了数据绑定，页面首次渲染出data中的数据
+                // mounted其实是vue实例创建的最后一个生命周期函数
+                // 常用于改变dom的样式(滚动条的样式，监听页面的滚动)
+                console.log('mounted',this.num)
+                alert('mounted')
+            },
+            data(){
+                return {
+                    num:1
+                }
+            },
+            methods:{
+
+            },
+        })
+        
+    </script>
+</body>
+</html>

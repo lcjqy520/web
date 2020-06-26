@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件注册</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <xpf-alert></xpf-alert>
+        <xpf-alert></xpf-alert>
+        <xpf-alert></xpf-alert>
+        <xpf-button></xpf-button>
+    </div>
+
+    <div id="test">
+        {{msg}}
+        <xpf-alert></xpf-alert>
+        <!-- <xpf-button></xpf-button> -->
+    </div>
+
+    <script>
+        // 全局注册组件
+        Vue.component('xpf-alert',{
+            template:`
+                <div>hello vue</div>
+            `
+        })
+
+        // 第一个vue实例对象
+        new Vue({
+            el: '#app',
+            
+            // 局部注册组件
+            components:{
+                'xpf-button':{
+                    template:`
+                        <button :style="style">按钮</button>
+                    `,
+                    data(){
+                        return {
+                            style:{
+                                color:'#fff',
+                                'background-color':'rgb(64,158,255)',
+                                'font-size':'16px',
+                                padding:'0.5em 1.5em',
+                                border:0,
+                                'border-radius':'4px',
+                                cursor:'pointer'
+                            }
+                        }
+                    }
+                }
+            },
+
+            data() {
+                return {
+
+                }
+            },
+        })
+
+        // 第二个vue实例对象
+        new Vue({
+            el:'#test',
+            data(){
+                return {
+                    msg:'hello test'
+                }
+            }
+        })
+
+    </script>
+</body>
+
+</html>

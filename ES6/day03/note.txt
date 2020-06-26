@@ -1,0 +1,483 @@
+复习
+    1、对象的扩展
+        1. 属性的简写
+            let name = 'xpf';
+            let obj = {
+                name:name
+            }
+
+            -->
+            let obj = {
+                name
+            }
+
+        2. 对象方法的简写
+            var obj = {
+                name:'xpf',
+                sayName:function(){
+
+                }
+            }
+            -->
+            var obj = {
+                name:'xpf',
+                sayName(){
+
+                }
+            }
+
+            new sayName(); // 简写的方法无法当作构造函数
+        
+        3. 构造函数的扩展
+            Object.xxx (实例无法调用这些方法)
+                Object.is(value1,value2) 
+                    判断两个变量是否相等，类似于 ===
+                Object.assign(target,s1,s2...)
+                    合并对象
+                    复制对象(浅克隆对象)
+
+                    如何实现深克隆？
+                    JSON.stringify、lodash第三方库
+                Object.setPrototypeOf(obj,prototype)
+                    将原型设置到对象中
+                Object.getPrototypeOf(obj)
+                    获取对象的原型
+                Object.keys()
+                    返回对象的键所组成的数组
+                Object.values()
+                    返回对象的属性值所组成的数组
+                Object.entries()
+                    返回对象的键值对所组成的数组(二维数组)
+
+    2、函数的扩展
+        1. 函数声明在对象中
+            var obj = {
+                name:'xpf',
+                sayName:function(){
+
+                }
+            }
+            -->
+            var obj = {
+                name:'xpf',
+                sayName(){
+
+                }
+            }
+
+        2. 函数声明在参数中(匿名函数/回调函数)     
+            简写成 箭头函数 ()=>{}
+            箭头函数的this指向该箭头函数的外部函数
+
+            let obj = {
+                name:'xpf',
+                age:25,
+                sayName:()=>{
+                    console.log(this.name)
+                },
+                sayAge:function(){
+                    console.log(this.age)
+                }
+            }
+            obj.sayName(); // undefined
+            obj.sayAge(); // 25
+                
+            let obj = {
+                list:[1,2,3,4],
+                name:'xpf',
+                age:25,
+                sayAge(){
+                    this.list.forEach(()=>{
+                        console.log(this.name)
+                        console.log(this.list)
+                    })
+                }
+            }
+            obj.sayAge(); 
+
+        3. 函数参数的默认值
+            function sayMsg({name,age,gender='male'}){
+
+            }
+            sayMsg({name,age});
+
+学习
+        4. rest参数 ...变量名
+            1) 函数参数中
+                在ES6之前，函数的所有参数存放在arguments中
+                function sayMsg(name,age,gender){
+                    console.log(name,age,gender);
+                    console.log(arguments,'---');
+                }
+                sayMsg('xpf',25,'male','安徽合肥');
+
+                ...变量名，该变量是一个数组，该变量将函数多余的参数都存放在数组中，就不需要arguments对象了
+                function sayMsg(...params){
+                    console.log(params); // [ 'xpf', 25, 'male', '安徽合肥' ]
+                }
+                sayMsg('xpf',25,'male','安徽合肥');
+
+                function sayMsg(name,age,...params){
+                    console.log(name,age,params); // xpf 25 ['male','安徽合肥']
+                }
+                sayMsg('xpf',25,'male','安徽合肥');
+
+                注意：rest参数后面，不可以再有其他参数，否则会报错
+                    function sayMsg(...params,name){}  // 这个代码是错误的
+            
+            2) 在对象中 (剥离)
+                let obj1 = {
+                    name:'xpf'
+                }
+                let obj2 = {
+                    age:25,
+                    gender:'male'
+                }
+                //如何将obj1与obj2合并？
+
+                //let obj = {obj1,obj2};
+                //console.log(obj);
+
+                //obj1.other = obj2;
+                //console.log(obj1);
+
+                //Object.assign(obj1,obj2);
+                //console.log(obj1);
+
+                ///var obj = Object.assign({},obj1,obj2);
+                //console.log(obj);
+
+                let obj = {...obj1,...obj2};
+                console.log(obj); // { name: 'xpf', age: 25, gender: 'male' }
+            
+            3) 在vue中
+                computed:{
+                    ...mapState('home',['article'])
+                }
+
+    3、数组的扩展
+        1) Array.from(v)
+            用于将两类对象转换为真正的数组:类数组对象、可遍历对象(Set、Map)
+
+            数组的创建方式
+                1. 数组字面量
+                    var arr = [1,2,3];
+                2. Array构造函数
+                    var arr = new Array('a'); // ['a']
+                3. [...str]
+                    let str = 'hello';
+                    let arr = [...str]; // [ 'h', 'e', 'l', 'l', 'o' ]
+                4. Array.from(v)
+                    v表示类数组对象、可遍历对象
+
+                    1、类数组对象(DOM操作返回的NodeList集合、函数内部的arguments对象)
+                        ES5的写法：
+                            let arr_like = {
+                                "0":"xpf",
+                                "1":"male",
+                                length:2
+                            }
+                            let arr = Array.prototype.slice.call(arr_like);
+                            console.log(arr); // [ 'xpf', 'male' ]
+
+                        ES6的写法：
+                            let arr_like = {
+                                "0":"xpf",
+                                "1":"male",
+                                length:2
+                            }
+                            let arr = Array.from(arr_like);
+                            console.log(arr); // [ 'xpf', 'male' ]
+
+                    2、可遍历对象
+                        String
+                            let str = 'hello';
+                            let arr = Array.from(str); // [ 'h', 'e', 'l', 'l', 'o' ]
+                        Set
+                            let set = new Set([1,2,3,3,2,1]);
+                            let arr = Array.from(str); // [ 1, 2, 3 ]
+                        ...
+                        
+                    注意：
+                        1、如果参数为一个真正的数组，Array.from会返回一个一模一样的新数组
+                        2、任何包含lenght属性的对象，都可以通过Array.from方法转换为一个数组
+
+        2) Array.of()
+            为了弥补Array构造函数的不足，由于Array构造函数在传递一个数字类型的参数时，会出现与我们预期不一样的结果
+                Array构造函数
+                    let arr1 = new Array(1,3); // [1,3]
+                    let arr2 = new Array(3); // [ <3 empty items> ]
+                Array.of()
+                    let arr3 = Array.of(1,3); // [1,3]
+                    let arr4 = Array.of(3); // [3]
+                
+        3) find()与findIndex()
+            Array.prototype.find()
+                找出第一个满足条件的元素并返回，如果没有满足条件的元素时，返回undefined
+
+                let arr = [1,2,3,4];
+                let res = arr.filter((item)=>{
+                    return item < 3;
+                })
+                console.log(res); // [1,2]
+
+                let arr = [1,2,3,4];
+                let res = arr.find((item)=>{
+                    return item < 3;
+                })
+                console.log(res); // 1
+
+            Array.prototype.findIndex()
+                返回第一个满足条件的元素的索引，如果没有满足条件的元素时，返回-1
+
+                let arr = [1,2,3,4];
+                let res = arr.findIndex((item)=>{
+                    return item < 3;
+                })
+                console.log(res); // 0
+
+                let arr = [1,2,3,4];
+                let res = arr.findIndex((item)=>{
+                    return item < 1;
+                })
+                console.log(res); // -1
+
+                数组有一个 indexOf()方法，能够找到元素首次出现时的索引，可以用来实现数组的去重
+                    findIndex是为了弥补indexOf的不足
+
+                    let arr = [1,2,3,NaN];
+                    let res = arr.indexOf(NaN); // -1
+                    也就是说，indexOf方法无法找出数组中的NaN元素
+
+                    findIndex方法也不能直接找到NaN出现的位置，但是可以借助Object.is来实现
+                    let arr = [1,2,3,NaN];
+                    let res = arr.findIndex((item)=>{
+                        return Object.is(item,NaN);
+                    })
+                    console.log(res); // 3
+
+        4) fill()
+            Array.prototype.fill()
+            使用给定值，填充数组
+
+            一个参数
+                let arr = [1,2,3];
+                arr.fill(4);
+                console.log(arr); // [4,4,4]
+                数组中原本已存在的元素，会被全部替换掉
+
+            三个参数
+                第一个参数 ：填充的数
+                第二个参数 ：填充的起始位置
+                第三个参数 ：填充的结束位置(不包含)
+                let arr = [1,2,3,4,5,6];
+                arr.fill(7,2,4);
+                console.log(arr); // [1,2,7,7,5,6]
+
+            注意：
+                1、如果被填充的数组为空，被填充后仍然是空数组
+                    let arr = [];
+                    arr.fill(1);
+                    console.log(arr); // []
+                2、如果填充的为对象，被赋值的只是同一个内存的指针
+                    let arr = new Array(3);
+                    arr.fill({name:'xpf'});
+                    console.log(arr); // [ { name: 'xpf' }, { name: 'xpf' }, { name: 'xpf' } ]
+                    arr[1].name = 'tom';
+                    console.log(arr); // [ { name: 'tom' }, { name: 'tom' }, { name: 'tom' } ]
+
+        5) keys、values、entries
+            这三个方法都用于数组的遍历，返回的都是一个遍历器对象(迭代器对象)，该遍历器对象可用于for-of循环
+            Array.prototype.keys()
+                对键名的遍历
+            Array.prototype.values()
+                对键值的遍历
+            Array.prototype.entries()
+                对键值对的遍历
+
+            let arr = ['tom','larry','xpf'];
+            console.log(arr.keys()); // Object [Array Iterator] {}
+            console.log(arr.values()); // Object [Array Iterator] {}
+            console.log(arr.entries()); // Object [Array Iterator] {}
+
+            案例一：
+                let arr = ['xpf','tom','larry'];
+                /*ES5的写法：
+                for(let key in arr){
+                    console.log(arr[key]); // xpf tom larry
+                }
+                */
+
+                //ES6的写法：
+                let values = arr.values();
+                for(let item of values){
+                    console.log(item); // xpf tom larry
+                }
+
+                let entry = arr.entries();
+                for(let item of entry){
+                    console.log(item,'---');
+                }
+
+            案例二：
+                let arr = ['xpf','tom','larry'];
+                let iterator = arr.values();
+                console.log(iterator.next()); // { value: 'xpf', done: false }
+                console.log(iterator.next()); // { value: 'tom', done: false }
+                console.log(iterator.next()); // { value: 'larry', done: false }
+                console.log(iterator.next()); // { value: undefined, done: true }
+
+                在遍历器对象中，提供一个next()方法，改方法会返回一个对象，表示当前数组的元素
+                value属性返回当前位置的元素
+                done属性是一个布尔值，表示遍历是否结束(即是否有必要再调用next方法)
+
+            案例三：
+                let arr = ['xpf','tom','larry];
+
+                //方法一
+                let value_iterator = arr.values();
+                let item;
+                while(!(item = value_iterator.next()).done){
+                    console.log(item.value); // xpf tom larry
+                }
+
+                //方法二
+                let values = arr.values();
+                for(let item of values){
+                    console.log(item); // xpf tom larry
+                }
+
+                //方法三
+                for(let key in arr){
+                    console.log(arr[key]); // xpf tom larry
+                }
+        
+        6) includes()
+            Array.prototype.includes()
+            表示数组是否包含给定的值，如果包含，返回true，否则返回false
+
+            includes是为了弥补indexOf方法的不足
+                1、不够语义化，它的含义是找到参数值的第一个出现位置，所以要去比较是否不等于-1，表达起来不够直观
+                2、它内部使用严格相等运算符（===）进行判断，这会导致对NaN的误判
+
+                let arr = [1,2,3,NaN];
+                console.log(arr.indexOf(NaN)); // -1
+                console.log(arr.includes(NaN)); // true
+                console.log(arr.includes(4)); // false
+
+    4、Set、Map集合
+        1) Set集合
+            类似于数组，但是成员的值都是唯一，不可重复
+
+            1. 定义方式：Set构造函数
+                let set = new Set();
+                console.log(set); // Set {}  在浏览器中会显示一个[]
+
+            2. 初始化：Set构造函数的参数必须为可遍历的数据
+                let set1 = new Set(1);
+                console.log(set1); // 1 is not iterable
+
+                let set2 = new Set([1,2,3]);
+                console.log(set2); // Set { 1, 2, 3 }
+                
+                let set3 = new Set('hello');
+                console.log(set3); // Set { 'h', 'e', 'l', 'o' }
+
+                也可以使用Set集合中的add()方法
+                    let set = new Set();
+                    let arr = [1,2,3,4];
+                    arr.forEach((item)=>{
+                        set.add(item);
+                    })
+                    console.log(set); // Set { 1, 2, 3, 4 }
+                    
+                    对比数组的push方法记忆
+            
+            3. 特点：
+                1、Set构造函数的参数必须为可遍历的数据
+                2、Set集合不会含有重复的值
+                    let set = new Set([1,2,3,3,2,1]);
+                    console.log(set); // Set { 1, 2, 3 }
+            
+            4. Set实例的属性
+                Set.prototype.size
+                    返回Set集合的所有成员总数
+                    let set = new Set([1,2,3,3,2,1]);
+                    console.log(set); // Set { 1, 2, 3 }
+                    console.log(set.size); // 3
+
+                Set.prototype.constructor
+                    构造函数，也就是Set函数
+                    let set = new Set([1,2,3,3,2,1]);
+                    console.log(set.constructor); // [Function: Set]
+
+            5. Set实例的方法
+                Set.prototype.add(value)
+                    向Set集合添加某个值，返回添加完值之后的Set集合
+                    let set = new Set([1,2,3,3,2,1]);
+                    set.add(4);
+                    console.log(set); // Set { 1, 2, 3, 4 }
+
+                Set.prototype.delete(value)
+                    删除Set集合中的某个值，删除成功时返回true，否则返回false
+                    let set = new Set([1,2,3,3,2,1]);
+                    let res = set.delete(3);
+                    console.log(res); // true
+                    let res1 = set.delete(3);
+                    console.log(res1); // false
+
+                    注意：在浏览器下，返回被删除值之后的Set集合
+                
+                Set.prototype.has(value)
+                    表示某个值是否属于Set集合，如果属于返回true，否则返回false
+                    let set = new Set([1,2,3,3,2,1]);
+                    let res = set.has(3);
+                    console.log(res); // true
+                    let res1 = set.has(4);
+                    console.log(res1); // false
+                
+                Set.prototype.clear()
+                    清空Set集合中所有的成员
+                    let set = new Set([1,2,3,3,2,1]);
+                    set.clear();
+                    console.log(set); // Set {}
+
+                Set.prototype.keys()
+                    键名的遍历器
+                Set.prototype.values()
+                    键值的遍历器
+                Set.prototype.entries()
+                    键值对的遍历器
+
+                Set集合中没有键名，只有键值(键名和键值是同一个值)，所以keys方法和values方法行为完全一致
+                    let set = new Set(['tom','larry','xpf']);
+                    //值的遍历器对象
+                    let value_iterator = set.values();
+                    //键的遍历器对象
+                    let key_iterator = set.keys();
+
+                    for(let val of value_iterator){
+                        console.log(val); // tom larry xpf
+                    }
+
+                    for(let key of key_iterator){
+                        console.log(key); // tom larry xpf
+                    }
+
+
+                Set集合的实例默认可遍历，因为它的默认遍历器生成函数就是它values方法
+
+                let set = new Set([1,2,3,4]);
+                console.log(Set.prototype)
+                console.log(Set.prototype[Symbol.iterator])
+                console.log(Set.prototype.values)
+                console.log(Set.prototype[Symbol.iterator] === Set.prototype.values) // true
+
+                任何部署了iterator接口的数据，都可以完成遍历操作
+                let set = new Set(['tom','larry','xpf']);
+                for(let val of set){
+                    console.log(val);
+                }
+
+
+

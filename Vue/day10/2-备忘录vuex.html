@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>备忘录vuex</title>
+    <!-- 引入vue -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vuex/3.2.0/vuex.js"></script>
+</head>
+
+<body>
+    <div id="app">
+      <form @submit.prevent="addMemoHandler">
+        <input type="text" v-model="msg">
+        <input type="submit" value="保存">
+        <ul>
+          <li v-for="item in list" :key="item.id">
+            <span>{{item.id}}</span>
+            <span>{{item.messaage}}</span>
+            <span>{{item.time}}</span>
+            <a href=""  @click.prevent="delMemo(item.id)">删除</a>
+          </li>
+        </ul>
+      </form>
+    </div>
+    <script>
+      const store = new Vuex.Store({
+        state:{
+          list:[]
+        },
+        getters:{},
+        mutations:{
+          delMemo(state,id){
+            state.list = state.list.filter((item)=>{
+              return item.id != id;
+            });
+          }
+        },
+        actions:{
+          async addMemo(context,memo){
+            let res = await $.get('');
+            momo.messaage = res.messaage;
+          }
+        }
+      });
+      new Vue({
+          el: '#app',
+          store,
+          data(){
+            return{
+              msg:'',
+              index:1
+            }
+          },
+          created(){
+            console.log(this.$store);
+          },
+          computed:{
+            list(){
+              return this.$store.state.list;
+            }
+          },
+          methods:{
+              addMemoHandler(){
+              let memo = {
+                id:this.index++,
+                messaage:this.msg,
+                time:new Date()
+              };
+              this.list.push(memo);
+              this.$store.dispatch('addMemo',memo);
+              },
+              delMemo(id){
+                this.$store.commit('delMemo',id);
+              }
+          }
+      })
+    </script>
+</body>
+
+</html>

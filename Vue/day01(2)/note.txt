@@ -1,0 +1,222 @@
+0、10天基础 + 5天项目
+    一周的小程序    
+    一周nodejs
+
+1、介绍
+    1) 回顾
+        1. 底层代码操作         (古代，走路)
+            组件、页面布局      重构
+            交互               XMLHttpRequest(ajax)
+            dom操作            DOM
+
+            // 生成p标签
+            var p = document.createElement('p');
+            // 向p标签内部添加文本
+            var text = document.createTextNode('只是一段文本');
+            p.appendChild(text);
+            // 追加到id为app的div
+            var app = document.getElementById('app');
+            app.appendChild(p);
+
+        2. dom驱动框架操作      (自行车)
+            组件、页面布局      bootstrap、layui
+            交互               jQuery(ajax)
+            dom操作            jQuery
+
+            $('#app')
+
+        3. vue企业级框架        (火车、飞机、高铁)
+            组件、页面布局      vue-element-admin、element-ui
+            交互               axios(ajax)
+            dom操作            零DOM操作(或者说很少操作)
+        
+    2) 什么是vue
+        前端三大框架：vue、react、angular
+        Vue 的核心库只关注视图层
+            mvc(后台主导的开发思想)
+            mvvm(vue就是基于这种模式)
+                m       model           数据模型    data
+                v       view            视图        html
+                vm      viewModel       视图控制
+        vue特点：
+            1. 使用es6语法编程
+            2. 几乎零DOM操作
+            3. 双向数据绑定
+            ...
+
+2、vue基础
+    1) 如何使用vue
+        1. 引入第三方库(bootCDN、离线包)
+        2. npm引用(npm install vue-cli --save)
+
+        会暴露出一个Vue构造函数
+    
+    2) vue实例对象
+        参考案例：2-vue.html
+        1. vm代表vue实例对象，vue的实例对象可以通过new Vue()来创建
+        2. el:'#app',意思是选中id为app的div容器，绑定模板
+        3. vm可以直接获取到data中的数据
+
+        注意：
+            vue可以对data中的数据进行监听，当data中的数据发生改变时，vue会自动的刷页面
+            但是由于js的限制，vue不能监听到对象、数组的变化
+                vue只监听栈区的改变，不监听堆区的改变
+
+    
+    3) 声明式渲染
+        Vue.js 的核心是一个允许采用简洁的模板语法来声明式地将数据渲染进 DOM 的系统
+        1. 输出一个变量
+            {{msg}}
+        2. 输出js表达式
+            {{num += 1}}
+            {{msg.split('').reverse().join('')}}
+
+    4) 列表渲染
+        1. 遍历数组 (参考3-vFor.html)
+            只获取每一项
+            <ul v-for="item in list" v-bind:key="item.id">
+                <li>{{item.name}}</li>
+            </ul>
+
+            获取每一项和它对应的索引
+            <ul v-for="(item,index) in list" v-bind:key="item.id">
+                <li>{{index}}----{{item.name}}</li>
+            </ul>
+
+            v-for
+                含义：是一个指令，用于列表渲染
+                语法：v-for="(item,index) in arr"
+                    item是被遍历的数组的每一项
+                    index是被遍历的数组的每一项对应得索引，可选
+                    arr是一个数组
+                注意：
+                    可以用 of 替代 in 作为分隔符，因为它更接近 JavaScript 迭代器的语法
+            
+            key
+                含义：为每一项元素提供一个标识
+                取值：字符串或者数值
+                    不要使用对象、数组
+                作用：为了给 Vue 一个提示，以便它能跟踪每个节点的身份，从而重用和重新排序现有元素
+
+                两个div，需要替换位置：
+                    加key
+                        vue会直接替换两个div的位置，重新排序元素
+                    不加key
+                        vue会直接替换两个div的文本内容，不会移动DOM(效率高)
+
+        2. 遍历对象
+            <ul v-for="(value,key,index) in obj">
+                <li>{{key}}---{{value}}---{{index}}</li>
+            </ul>
+
+            key表示键名
+            value表示键值
+            key表示索引
+        
+        3. 遍历数字(整数)
+            <ul v-for="n in 5">
+                {{n}}
+            </ul>
+            
+        4. 数据的更新
+            arr:[1,2,3,4]
+            msg:'hello'
+
+            setInterval(() => {
+                let random = Math.floor(Math.random()*10);
+                // vm.msg += random;
+                // console.log(vm.msg)
+
+                vm.arr[vm.arr.length] = random;
+                console.log(vm.arr);
+            }, 2000);
+
+            msg变化后，页面会更新
+            但是arr变化后，页面不会更新
+        
+            解决方法：(改变引用地址)
+                1. 数组
+                    1、利用数组的索引设置一个新的值到数组中，页面无法刷新
+                    2、修改数组的长度时，页面无法刷新
+                    3、Vue 将被侦听的数组的变更方法进行了包裹，所以它们也将会触发视图更新
+                        push()
+                        pop()
+                        shift()
+                        unshift()
+                        splice()
+                        sort()
+                        reverse()
+                    
+                    解决：vm.arr = [...vm.arr,random];
+
+                2. 对象
+                    对象新增属性时，无法引起页面改变
+                        obj : {
+                            name:'xpf',
+                            age:25
+                        }
+                        add(){
+                            // 通过this直接访问到data中的数据
+                            this.obj.gender = 'male';
+                            console.log(this.obj);
+                        }
+
+                    解决：
+                        1. 使用this.$set方法
+                            this.$set(this.obj,'gender','male');
+
+                        2. 新增多个属性名和属性值的时候，可以使用Object.assign()
+                            let address = {
+                                province:'安徽省',
+                                city:'合肥市'
+                            }
+                            this.obj = Object.assign({},this.obj,address)
+                            console.log(this.obj);
+
+                            如下方式不会引起页面的更新
+                            Object.assign(this.obj,address);
+                        
+                        3. 强制Vue实例重新渲染 【不推荐使用该方式】
+                            this.$forceUpdate();
+                        
+                        4. 第三方库lodash
+                            this.obj = _.clone(this.obj);
+    
+    5) 属性的绑定
+        v-bind是一个指令，用于动态的绑定属性
+        v-bind具有简写形式
+            v-bind:key="item.id"
+            ==>等价于
+            :key="item.id"
+
+        <div title="title">hello vue</div>
+        <div v-bind:title="title">hello vue</div>
+        <div :title="title">hello vue</div>
+
+        title:'动态title'
+        参考：5-vBind.html
+
+    6) 条件渲染 (v-if)
+        根据条件的正确与否，选择渲染或者不渲染某一块内容
+        v-if
+        v-if v-else
+        v-if v-else-if ... v-else
+
+        <div v-if="ifShow">hello vue</div>
+        <div v-else>hello xpf</div>
+        ifShow为真时，渲染第一个div，否则渲染第二个div
+
+        案例一：伪登录，未登陆时显示请登录，登录显示你好xxx
+            
+
+
+
+
+
+
+
+
+
+
+
+

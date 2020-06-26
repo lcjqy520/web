@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>axios-get</title>
+    <!-- 引入vue -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+    <!-- 引入axios -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.19.2/axios.js"></script>
+</head>
+<body>
+    <script>
+        // 基路径
+        let baseURL = 'http://39.96.21.48:8099'
+        // url
+        let url = '/manager/article/findArticle'
+        
+        // 分页查询所有文章
+        axios.get(baseURL+url,{
+            params:{
+                page:0,
+                pageSize:10
+            }
+        })
+        .then((res)=>{
+            console.log(res.data.data.list)
+        })
+    </script>
+</body>
+</html>

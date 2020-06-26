@@ -1,0 +1,211 @@
+复习
+    1、回顾
+    2、什么是vue
+        mvvm、mvc
+        vue特点
+            es6
+            双向数据绑定
+            零DOM操作
+
+            mvvm与mvc的区别？
+            vue与jQuery的区别？
+
+    3、vue基础语法
+        1) 使用方式
+            cdn
+            npm
+        2) vue实例对象
+            let vm = new Vue({});
+
+            <div id="app">
+                {{msg}}
+            </div> 
+            new Vue({
+                el:'#app',
+                //数据
+                data(){
+                    return {
+                        msg:'helle vue'
+                    }
+                },
+                //方法
+                methods:{
+                    
+                }
+            });
+
+            注意：vue可以对data中的值进行监听，当data中的数据发生改变时，页面刷新
+                但是数组、对象无法被监听到
+
+        3) 声明式渲染
+            变量
+                {{msg}}
+            js表达式
+                {{num + 1}}
+                {{str.split('').reverse().join('')}}
+        
+        4) 列表渲染 (v-for)
+            1. 数组 
+                list = [{},{},{},{}]
+                <div v-for="(item,index) in list" v-bind:key="item.id">
+                    <div>{{item.id}}</div>
+                    <div>{{item.name}}</div>
+                </div>
+                
+                v-for是一个指令，用于列表渲染
+                item当前每一项
+                index当前每一项的索引
+                list被遍历数组
+                key是为为vue提供标识，取值为数字或者字符串
+            
+            2. 对象
+                {id:1,name:'xpf'}
+
+                <div v-for="(value,key,index) in list">
+                    <div>{{key}}:{{value}}:{{index}}</div>
+                </div>
+                
+                value键值
+                key键名
+                index索引
+            
+            3. 数字(整数)
+                <div v-for="n in 5">
+                    <div>{{n}}</div>
+                </div>
+
+            4. *数据更新
+                1、数组
+                    let arr = [1,2,3,4]
+                    let random = Math.random();
+
+                    let arr = [...arr,random]
+                    arr.push(random);
+                2、对象
+                    对象新增属性值的时候，页面不更新
+                    let obj = {id:1,name:'xpf'}
+                    gender = 'male';
+                    address = {
+                        province:'安徽省',
+                        city:'合肥市'
+                    }
+
+                    1. this.$set(this.obj,'gender','male')
+                    2. Object.assign()
+                        this.obj = Object.assign({},this.obj,address)
+                    3. this.$forceUpdate() 【一般情况下不推荐】
+                    4. lodash()
+                        this.obj = _.clone(this.obj)
+
+        5) 属性的绑定
+            v-bind:key='xxx'
+            ===>
+            :key='xxx'
+
+学习
+        6) 条件渲染 (v-if/v-show)
+            1. v-if
+                v-if v-else
+                v-if v-else-if .. v-else
+
+                注意：使用key管理可复用的元素
+                    Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从头开始渲染
+                    1. 加key
+                        加上key的元素会在每次切换的时候都去重新渲染
+                    2. 不加key
+                        没有jiakey的元素，在每次切换的时候都不会渲染，复用已存在的元素
+                    参考：3-key.html
+        
+            2. v-show
+                根据条件正确与否，显示某一块内容，但是v-show仅仅是切换元素display属性
+                参考：4-vSho.html
+            
+            3. v-if与v-show
+                1) v-if式根据条件判断是否渲染元素，而v-show自始至终都渲染，仅仅改变display属性
+                2) v-if可以搭配v-else，但是v-show没有
+                3) 
+                    频繁地切换  ==>  v-show 较好
+                    条件很少改变  ==>  v-if 较好
+
+                注意：不推荐同时使用 v-if 和 v-for
+
+        7) 事件绑定 (v-on)
+            jQuery中需要先获取到DOM节点，再绑定事件
+
+            1. 事件绑定
+                v-on:click="函数"
+                    <img v-on:click="toggle">
+                v-on:click="js表达式"
+                    <div v-on:click="num += 1">{{num}}</div>
+                    <div v-on:click="alert('hello vue')">123</div>
+            
+            2. 事件参数
+                v-on:click="函数(参数)"
+                    v-on:click="handler(1)"
+                    v-on:click="handler('1')"
+
+            3. 事件简写
+                v-on:click="函数"
+                ===>等价于
+                @click="函数"
+                
+            4. 事件对象(一般不推荐使用)
+                @click='handler($event)'
+                通过$event可以访问到被点击的DOM节点
+            
+            5. 事件修饰符
+                <a href="" @click.prevent="login($event)">登录</a>
+
+                事件修饰符是以.开头的指令后缀来表示的
+                    @click.xxx
+                        @click.prevent
+                            表单提交的默认行为，a标签的默认行为
+
+                        @click.stop
+                            阻止单击事件的继续传播
+            
+            6. 按键修饰符
+                v-on:keyup.enter="" 回车键
+                @keyup.enter="" 
+
+                @keyup.up
+                @keyup.left
+                @keyup.right
+                @keyup.down
+
+        8) 表单 (v-model)
+            双向数据绑定
+            1. v-model指令在表单input、textarea及select元素上创建双向数据绑定
+                model                   vm                  view
+                模型                     viewModel          视图
+                data() {
+                    return {                                <input type="text" v-model="username">
+                        username:'xpf'
+                    }
+                },
+
+                双向：
+                    data中的值发生了改变，会影响视图
+                    视图输入了值，又会改变data中的值
+                
+                注意：
+                    v-model 会忽略所有表单元素的 value、checked、selected的初始值而总是将 Vue 实例的数据作为数据来源。
+                    你应该通过 JavaScript 在组件的 data 选项中声明初始值。
+
+            2. 对于表单的双向数据绑定
+                1、form.title的值绑定到了输入框的value上
+                2、form中没有title属性时，会自动的在输入时去创建，有title时，会去对title进行修改
+                3、在select中，如果v-model的初始值未能匹配到任何值，select为'未选择'的状态
+                    如果希望默认选择第一个，给定一个初始值即可
+                    form:{
+                        title:'初始标题',
+                        categoryId:1
+                    }
+                4、表单具有默认行为，需要使用prevent阻止
+
+                单选按钮
+                    在给单选按钮绑定值的时候，需要添加value属性
+                    
+
+                    
+                

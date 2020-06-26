@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件传值</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div>总数：{{total}}</div>
+        <xpf-alert @add="addTotal" @reduce="reduceTotal"></xpf-alert>
+        <xpf-alert @add="addTotal" @reduce="reduceTotal"></xpf-alert>
+    </div>
+
+    <script>
+        // 全局注册组件
+        Vue.component('xpf-alert',{
+            template:`
+                <div>
+                  <div>当签数:{{count}}</div>
+                  <div>
+                    <button @click="reduceHandler">减少</button>
+                    <button @click="addHandler">增加</button>  
+                  </div>
+                </div>
+            `,methods:{
+              reduceHandler(){
+                this.$emit('reduce');
+                this.count--;
+              },
+              addHandler(){
+                this.$emit('add');
+                this.count++;
+              }
+            },
+            data(){
+              return{
+                count:0
+              }
+            }
+        })
+        let app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                  total:0
+                }
+            },
+            methods:{
+              reduceTotal(){
+                this.total--;
+              },
+              addTotal(){
+                this.total++;
+              }
+            }
+        })
+    </script>
+</body>
+
+</html>

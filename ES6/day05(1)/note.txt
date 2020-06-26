@@ -1,0 +1,224 @@
+1、Promise对象
+    在js中，所有代码都是单线程执行的，为了避免代码阻塞，js中网络请求、浏览器操作等都需要异步执行
+
+    1) 异步执行可以使用回调函数实现
+        function callBack(){
+            console.log('执行完毕');
+        }
+        console.log('setTimeout之前');
+        setTimeout(callBack,1);
+        console.log('setTimeout之后');
+
+        对于ajax来说，它就是典型的异步操作
+    
+    2) 原生ajax
+        基于回调函数的异步操作的封装
+        参考案例2-ajax.html
+
+        代码能否简化？如下形式：
+        var ajax = get('xxx',data);
+        ajax.ifSuccess(success)
+            .ifError(error)
+    
+    3) jQuery中的ajax
+        $.ajax({
+            url:'',
+            method:'',
+            data:{},
+            success:function(){
+                console.log(1);
+            },
+            error:function(){
+                console.log(2);
+            }
+        })
+        console.log(3);
+        3 -> 1/2
+
+
+        $.ajax({
+            url:'http://39.96.21.48:8099/manager/category/findAllCategory',
+            method:'get',
+            data:{},
+            success:function(res){
+                console.log(res.data)
+            }
+        })
+        $.ajax({
+            url:'http://39.96.21.48:8099/manager/user/findAllUser',
+            method:'get',
+            data:{},
+            success:function(res){
+                console.log(res.data)
+            }
+        })
+        现象：两个请求的结果不确定是谁先返回
+        需求：根据栏目查询对应的文章(先有栏目数据，再根据栏目id查询该栏目下对应的所有文章)
+        问题：两个请求的结果是否可以有一个顺序？
+            将查询文章的ajax放在查询栏目成功的回调函数中执行即可，参考3-jQuery.html
+        
+        --->
+        需求改变：根据栏目查询对应的文章，再查询文章下的所有评论
+
+        会出现回调地狱的现象
+
+    4) 异步编程的解决方案
+        Promise对象     最基础的解决方案
+        Generator函数   
+        async函数
+
+            vue全家桶
+                vue-cli + element-ui + axios + vuex + vue-router
+
+                axios内部封装promise 和 http(ajax)
+
+                async findAll(){
+                    //获取栏目
+                    let res1 = await axios.get('xxx');
+                    //根据栏目获取文章
+                    let res2 = await axios.get('xxx',{
+                        params:{
+                            categoryId:res1.data[0].id
+                        }
+                    });
+                    //根据文章获取评论
+                    let res3 = await axios.get('xxx',{
+                        params:{
+                            id:res2.data.list[0].id
+                        }
+                    });
+                }
+                findAll();
+    
+    5) Promise对象
+        是容器，里面保存了未来某个时间才会返回的结果(一般是一个异步操作)
+        1. 定义方式：Promise构造函数
+            let promsie = new Promise((resolve,reject)=>{});
+            console.log(promsie);
+
+            Promise构造函数接受一个匿名函数作为参数，该匿名函数又可以接收两个参数resolve、reject
+            resolve,reject是两个函数，可以改变promise对象的状态，js引擎自带的，不需要自己去部署
+
+            let promsie = new Promise((resolve,reject)=>{
+                xxx运行代码
+                异步操作成功 -> 执行resolve() -> Promise对象的的状态从'进行中'变为'已成功'
+                异步操作失败 -> 执行reject() -> Promise对象的的状态从'进行中'变为'已失败'
+            });
+
+            promise实例可以使用then()方法分别指定'已成功'和'已失败'的回调函数
+
+            案例：生成一个随机数，判断是否小于0.5
+                详见4-proise.html
+
+        2. 实例方法
+            Promise.prototype.then()
+                指定请求成功时的回调函数
+                
+                then方法可以多次调用
+                    promise
+                    .then((res1)=>{
+                        console.log('res1',res1)
+                        //将当前结果返回，用于下一then
+                        return res1
+                    })
+                    .then((res2)=>{
+                        console.log('res2',res2)
+                    })
+
+            Promise.prototype.catch()
+                指定请求失败时的回调函数
+                promise
+                .then((res1)=>{
+                    console.log('res1',res1)
+                    console.log(a);
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+                catch不仅可以捕捉到promise对象的错，也可以拿到then方法中的错误
+                
+                // bad
+                promise
+                .then(function(data) {
+                    // success
+                }, function(err) {
+                    // error
+                });
+
+                // good 推荐这种形式
+                promise
+                .then(function(data) { //cb
+                    // success
+                })
+                .catch(function(err) {
+                    // error
+                });
+
+            Promise.prototype.finally()
+                不管promise对象的状态为失败还是成功，最终都会执行该方法
+
+2、(拓展)Generator函数
+    是ES6提供的一种解决异步操作的方法
+    形式上与普通函数有不同：
+        1、function 关键字与函数名之间有一个星号
+        2、函数体内部使用yield(产出)表达式，定义不同状态
+    
+    1) 声明
+        function* sayName(){
+            yield 'xpf';
+            yield '25';
+            yield 'male';
+            return '结束';
+        }
+        let res = sayName();
+        console.log(res); // Generator {  } 
+        调用generator函数之后，该函数并不会执行，返回的也不是函数的运行结果
+        返回的是一个指向内部状态的指针对象，也就是遍历器对象iterator
+
+        console.log(res.next());
+        console.log(res.next());
+        console.log(res.next());
+        console.log(res.next());
+        console.log(res.next());
+
+        好处： 
+            实现异步代码的同步化
+        
+        注意：
+            星号的位置可以是如下几种形式
+                function* sayName(){}
+                function * sayName(){}
+                function *sayName(){}
+                function*sayName(){}
+
+    2) yield表达式
+        1、yield只能出现在generator函数中
+        2、yield后面的变量可以是值，也可以是函数的调用
+        3、yield在默认情况下没有返回值
+    
+    3) Generator函数实现异步函数的同步化
+        参考7-genrator2.html
+
+3、****async函数
+    是对于Generator函数的一种简化(语法糖)，使得异步操作变得更简单
+    1) async函数的形式
+        async function sayName(){
+            let category = await $.get('xx');
+            console.log(category);
+        }
+        对比generator函数，
+            星号(*) ==> async
+            yield  ==> await
+
+    2) 对generator函数的优化
+        1. 更加语义化
+            async表示函数里有异步操作，await表示紧跟在后面的表达式需要等待结果
+        2. 返回值是 Promise
+            比 Generator 函数的返回值是 Iterator 对象方便多了。你可以用then方法指定下一步的操作
+        3. 不需要手动调用
+            async函数自带执行器。也就是说，async函数的执行，与普通函数一模一样，只要一行
+        
+    3) 具体应用
+        参考8-async.html
+        
+

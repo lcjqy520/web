@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作用域插槽</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <xpf-alert :data="category">
+          <template v-solt:list='slot'>
+            <div>
+              {{slot}}
+            </div>
+          </template>
+        </xpf-alert>
+    </div>
+    <template id="cpn">
+      <div>
+        <ul>
+          <li v-for='item in data'>
+            <slot :scope="item"></slot>
+          </li>
+        </ul>
+      </div>
+    </template>
+    <script>
+        // 全局注册组件
+        Vue.component('xpf-alert',{
+            template:"#cpn",
+            props:{
+              data:Array
+            }
+        })
+
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    category:[{
+                      id:1,
+                      name:'军事',
+                      comment:'军事天地'
+                    },{
+                      id:2,
+                      name:'军事2',
+                      comment:'军事天地2'
+                    }]
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

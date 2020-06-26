@@ -1,0 +1,195 @@
+复习
+    1、条件渲染
+        v-if='boolean'
+        v-else
+
+        v-show=''   -->   给元素添加了display属性
+
+        频繁切换 ==> v-show
+        条件几乎不变时  ==>  v-if
+
+    2、事件的绑定
+        1. 绑定
+            v-on:click='handler'
+            v-on:click='js表达式'
+        2. 简写
+            v-on:click='handler'
+            ==>
+            @click='handler'
+        3. 参数
+            @click='handler(item)'
+            methods:{
+                handler(val){
+                    console.log(val)
+                }
+            }
+        4. 事件对象
+            <div @click="handler($event)">123</div>
+            methods:{
+                handler(event){
+                    console.log(event); // 当前点击的div
+                }
+            }
+        5. 事件修饰符
+            @click.prevent='handler'
+                阻止标签的默认行为(form、a)
+            @click.stop='handler'
+                阻止单击事件继续传播
+        6. 按键修饰符
+            @keyup.enter='handler'
+                按下回车键时，执行handler
+        
+    3、表单
+        双向数据绑定，v-model
+        1. form.title的值绑定到input的value，如果form对象中初始值的时候没有title，会自动新增一个title属性
+        2. select默认是'未选中'的状态，option是通过列表渲染v-for遍历出来的，它的值要绑定在value
+        3. 对于单选按钮，在使用v-model时要加value
+        4. 对于复选按钮，在使用v-model时，需要将存储数据的变量初始化为数组
+                    form:{
+                        options:[]
+                    },
+                    <label for="typeOne">
+                        <input v-model='form.options' value="css" type="checkbox" id="typeOne">css
+                    </label>
+
+        5. 修饰符
+            .lazy
+                v-model是每次在文本框输入值时，data的都会做一次改变
+                使用lazy后，当切换到下一个输入框时，data的值才会做改变
+                <input v-model.lazy="msg">
+            .number
+                自动将用户的输入值转为数值类型
+                <input v-model.number='form.liststyle' value="1">样式一
+            .trim
+                自动过滤用户输入的首尾空白字符
+                <input v-model.trim="msg">
+
+        6.案例：使用表单实现登录功能(2-login.html)
+            1、点击登录按钮
+            2、弹出模态框，输入用户名和密码
+            3、点击确定，请求后台接口
+                用户名和密码正确时，会返回一个token
+
+                1. 请求方式 get/post   put/delete
+                2. 如果是post请求，参数一般为如下两种形式(contentType的取值)
+                    application/json  json字符串
+                        需要使用JSON.stringify()
+                        '{"key":"value",...}'
+                    application/x-www-form-urlencoded  键值对(查询字符串)
+                        key1=value1&key2=value2
+                3. 返回数据
+                    {
+                        status:200,     //200正常，500后台异常，400参数错误...
+                        message:'',     //请求反馈信息
+                        data:'',        //请求反馈的数据
+                        timestamp       //时间戳
+                    }
+            4、将token存储到浏览器，并通过token获取用户信息
+            5、退出
+                将token从浏览器里面清空
+            
+        7. 案例：查询所有文章(2-login.html)
+
+
+    4、vue生命周期钩子函数
+        1. 初始化
+        2. 创建一个vue实例对象
+        3. 模板的初始化
+            vm.num设置到模板中
+        4. 监听数据的改变
+        5. 重新渲染
+        6. 销毁
+
+        生命周期函数
+            beforeCreate()
+            *created()
+            beforeMount()
+            *mounted()
+            beforeUpdate()
+            updated()
+            beforeDestory()
+            destoryed()
+
+    小结：
+        1. Vue构造函数的参数
+            new Vue({
+                el:'#app',
+                // 数据
+                data(){
+                    return {
+                        form:{}
+                    }
+                },
+                // 方法
+                methods:{
+
+                },
+                // 生命周期函数
+                beforeCreate(),
+                *created(),
+                beforeMount(),
+                *mounted(),
+                beforeUpdate(),
+                updated(),
+                beforeDestory(),
+                destoryed(),
+
+                // 计算属性
+                computed:{},
+                // 监听
+                watch:{},
+                // 自定义指令
+                directives:{},
+                // 过滤器
+                filters:{}
+            })
+
+        2. 指令 (带有v- 前缀的特殊属性)
+            v-for   列表渲染
+                v-for='item in list'
+            v-if    条件渲染
+                v-if='boolean'
+            v-else
+            v-show
+            v-bind  动态绑定属性
+                v-bind:src='src'
+                v-bind:style='style'
+                ===>
+                :src='src'
+                :style='style'
+            v-on    事件绑定
+                v-on:click='handler'
+                ===>
+                @click='handler'
+            v-model  双向数据绑定，应用在表单元素上
+                v-model='form.username'
+
+            自定义指令
+                vue可以允许我们自定义一些指令，参考4-vMy.html
+
+    5、计算属性 (computed)
+        1. 含义
+            指的是将data中的原有数据进行计算后返回的结果
+            参考：5-computed.html
+        
+            结论：
+                1、计算属性的结果可以当作data中的中的数据一样来使用 --> {{}}
+                2、当原有数据发生改变时，计算属性会立即重新计算
+                3、涉及到复杂的逻辑时，一般使用计算属性，不推荐直接在{{}}里面做操作
+                    在methods中，也可以定义一个方法，但是在使用的时候需要加()调用
+                4、在多次使用data中的数据时，计算属性只会执行一次，但是方法会执行多次
+                    计算属性    -->     效率高
+                    方法        -->     效率低
+        2. 案例
+
+
+
+
+
+
+
+
+
+
+
+

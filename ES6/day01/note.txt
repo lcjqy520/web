@@ -1,0 +1,374 @@
+1、环境搭建
+    nodejs
+    下载地址：http://nodejs.cn/download/
+
+2、ES6介绍
+    1) ES5的版本升级
+    2) 提供了简介的语法和新的特性
+        迭代器
+        Map、Set
+        Promise
+        箭头函数
+        异步函数
+        ...
+    3) ES6在浏览器上的兼容性比ES5差一点，但是在nodejs环境下完全兼容
+        有些代码在浏览器上没有效果，比如模块化
+
+        在js中做ajax、dom时，必须将代码运行在浏览器上
+        如何将ES6运行在浏览器，使它兼容？
+
+        模块化
+            1、dom驱动
+                看点资讯（html片段）
+                    category.html
+                    article.html
+                    comment.html
+
+                在这一阶段，dom为真实的dom，先有dom再有js
+                category.html
+                    <div>
+                    
+                    </div>
+
+            2、数据驱动
+                在ES6中，dom为虚拟的dom(通过js来生成dom)，现有js再有dom
+                    category.js
+                    article.js
+                    comment.js
+    
+3、基础语法
+    学习书籍推荐：https://es6.ruanyifeng.com/
+
+    1) let命令
+        ES6新增了let命令，用来声明变量，用法类似于var
+        var a = 1;
+        let b = 2;
+
+
+        {
+            var a =1;
+        }
+        console.log(a);
+
+        {
+            let b = 2; // b变量只能在{}内使用
+        }
+        console.log(b);
+
+        JS中只有函数作用域和全局作用域，没有块级作用域，{}限定不了var声明变量的范围
+        通过let声明的变量，只能在块级作用域中使用，类似于局部变量
+
+
+        问题：内层变量会覆盖外层变量(原意是，if判断外部使用外层的date，if判断内部使用内层date)
+            var date = new Date();
+            function getDate(){
+                console.log(date);
+                if(false){
+                    var date = 2020/05/18;
+                    console.log(date);
+                }
+            }
+            getDate(); // undefined
+        
+            ==>
+            
+            var date = new Date();
+            function getDate(){
+                console.log(date);
+                if(false){
+                    let date = 2020/05/18;
+                    console.log(date);
+                }
+            }
+            getDate(); // 当前时间
+
+        特点：
+            1. 存在块级作用域
+            2. 不允许变量的重复声明
+                var a = 1;
+                var a = 2;
+                console.log(a); // 2
+
+                let b = 1;
+                let b = 2;
+                console.log(b); // 'b' has already been declared
+            3. 不允许变量的提升
+                console.log(a); // undefined
+                var a = 1;
+
+                console.log(b); // b is not defined
+                let b = 2;
+                使用关键字let声明出来的变量，不可以在声明之前被使用，否则会报错
+            4. 存在暂时性死区
+                var temp = 123;
+                if(true){
+                    temp = 'abc';
+                    let temp;
+                }
+                在判断体中，使用了let声明了一个temp局部变量，在这个变量声明之前，都不可以操作该变量
+                这个现象叫"暂时性死区"
+
+    2) const命令
+        声明一个只读的常量。一旦声明，常量的值就不能改变。
+        const a = 1;
+        console.log(a); // 1
+
+        const a = 1;
+        a++;
+        console.log(a); // 报错
+
+        在引入第三方库的时候，一般会使用const
+
+        特点：
+            1. 存在块级作用域
+            2. 不允许变量的重复声明
+            3. 存在暂时性死区
+            4. 变量的声明和初始化要同时进行
+                const a = 1;
+                console.log(a); // 1
+
+                const b;
+                b = 2;
+                console.log(b); // 报错
+
+        总结：
+            声明方式        变量提升        暂时性死区     重复声明        块级作用域
+              var            允许            不存在         允许           不存在
+              let           不允许            存在         不允许           存在
+             const          不允许            存在         不允许           存在
+
+    3) 解构(模式匹配)
+        ES6中，允许按照一定的模式，从数组或对象中提取值，并且对其进行一些操作，比如赋值
+
+        1. 数组的解构
+            ES6之前，赋值
+                var name = 'xpf';
+                var age = 25;
+                var gender = 'male';
+                console.log(name,age,gender);
+
+            ES6中，赋值
+                let [name,age,gender] = ['xpf',25,'male'];
+                console.log(name,age,gender); // xpf 25 male
+
+            只要等号两边的模式相同，左边的变量就会被赋予等号右边对应位置上的值
+                let [age,name,gender] = ['xpf',25,'male'];
+                console.log(name,age,gender); // 25 xpf male
+            
+            案例
+                等号的左边模式个数等于于右边的
+                    let [,,gender] = ['xpf',25,'male'];
+                    console.log(gender); // male
+
+                    let [a,b,c] = [1,2,[3,4]];
+                    console.log(a,b,c); // 1 2 [3,4]
+
+                等号的左边模式个数大于右边的
+                    let [name] = [];
+                    console.log(name); // undefined
+
+                等号的左边模式个数小于右边的
+                    let [gender] = ['xpf',25,'male'];
+                    console.log(gender); // xpf
+
+                等号两边的模式不相同
+                    let [gender] = 'xpf';
+                    console.log(gender); // x
+
+                    let [gender] = true;
+                    console.log(gender); // 报错，true不可迭代
+
+                    可遍历
+                        Array、String、Map、Set、函数的arguments对象
+                    不可遍历
+                        true/false、NaN、undefined、null、{}
+                
+        2. 数组解构默认值
+            解构的时候，允许指定默认值
+            
+            let [name='xpf'] = [];
+            console.log(name); // xpf
+
+            let [name='xpf'] = ['张三'];
+            console.log(name); // 张三
+
+            1、只有当数组对应位置上的值为undefined时，默认值才会生效
+            let [name='xpf'] = [null];
+            console.log(name); // null
+
+            let [name='xpf'] = [undefined];
+            console.log(name); // xpf
+
+            2、默认值可以引用解构赋值的其他变量，但是这个变量必须已经声明过，否则会报错
+            let [name,age,gender=name] = ['xpf',25];
+            console.log(name,age,gender); // xpf 25 xpf
+
+            let [name='xpf',name2=name] = [];
+            console.log(name,name2); // xpf xpf
+
+            let [name=name2,name2='xpf'] = [];
+            console.log(name,name2); // 报错，name2未定义，无法在初始化之前访问到name2
+
+        3. 对象的解构
+            var obj = {
+                name:'xpf',
+                age:25,
+                gender:'male'
+            }
+            /*var name = obj.name;
+            var age = obj.age;
+            var gender = obj.gender;
+            */
+
+            let {name,age,gender} = obj;
+            console.log(name,age,gender); // xpf 25 male
+
+            对象的解构与数组的解构不同点：
+               1、数组的元素是按顺序排列的，变量的取值由它的位置决定(根据索引一一对应取值)
+                 对象的属性没有次序，变量必须与属性名同名，才能取到正确的值，跟变量的位置没有关系
+
+                等号左边变量的次序，与等号右边同名属性的次序不一样，对取值没有影响
+                let {age,name,gender} = obj;
+                console.log(name,age,gender); // xpf 25 male
+
+                变量与属性名不同名(解构失败，变量的值为undefined)
+                let {name,age,address} = obj;
+                console.log(name,age,address); // xpf 25 undefined
+               2、对象解构的内部机制
+                let {name,age,gender:address} = obj;
+                console.log(name,age,address); // xpf 25 male
+                ==>等价于
+                let {name:name,age:age,gender:address} = obj;
+                console.log(name,age,address); // xpf 25 male
+                
+                let {name:name,age:age,gender:address} = obj;
+                console.log(name,age,gender); // 报错，gender is not defined
+
+        4. 对象解构默认值
+            var obj = {
+                name:'xpf',
+                age:25,
+                gender:undefined
+            }
+            let {name,age,gender='male'} = obj;
+            console.log(name,age,gender); // xpf 25 male
+
+            ===> 等价于
+            var obj = {
+                name:'xpf',
+                age:25
+            }
+            let {name,age,gender='male'} = obj;
+            console.log(name,age,gender); // xpf 25 male
+
+            只有当对象的属性值为undefined的时候，默认值才生效
+
+            var obj = {
+                name:'xpf',
+                age:25,
+                gender:'female'
+            }
+            let {name,age,gender='male'} = obj;
+            console.log(name,age,gender); // xpf 25 female
+
+        5. 解构的用途
+            1、交换两个变量的值
+                let a = 1;
+                let b = 2;
+                let temp;
+
+                temp = a;
+                a = b;
+                b = temp;
+                console.log(a,b); // 2 1
+
+                ===> 等价于
+                let a = 1;
+                let b = 2;
+                [a,b] = [b,a];
+                console.log(a,b); // 2 1
+            
+            2、让函数返回多个值
+                function math(a,b){
+                    var sub = a-b;
+                    var add = a+b;
+                    return {sub,add}
+                }
+
+                let res = math(1,2);
+                console.log(res); 
+                console.log(res.sub); // -1
+                console.log(res.add); // 3
+                此时取值不方便
+
+                说明：如果希望函数同时返回多个参数，我们可以将这几个参数放在一个数组或者对象中返回
+
+                function math(a,b){
+                    var sub = a-b;
+                    var add = a+b;
+                    return [add,sub]
+                }
+
+                let [add,sub] = math(1,2);
+                console.log(add,sub); // 3 -1
+
+            3、在对象中快速取值
+                var obj = {
+                    name:'xpf',
+                    age:25,
+                    gender:'male'
+                }
+                /*var name = obj.name;
+                var age = obj.age;
+                var gender = obj.gender;
+                */
+
+                let {name,age,gender} = obj;
+                console.log(name,age,gender); // xpf 25 male
+
+                ~~~~
+
+                let obj = {
+                    name:'xpf',
+                    age:25,
+                    gender:'male',
+                    address:{
+                        province:'安徽省',
+                        city:'合肥市'
+                    }
+                }
+
+                //var city = obj.address.city;
+                let {name,address:{city}} = obj;
+                console.log(name,city); // xpf 合肥市
+
+            4、函数参数的定义
+                ES6之前，不能直接为函数的参数设定默认值
+
+                function ajax({url,method='get',data,success}){
+                    console.log(url);
+                    console.log(method);
+                    console.log(data);
+                    console.log(success);
+                }
+
+                ajax({
+                    url:'www.baidu.com',
+                    success:function(){
+
+                    },
+                    data:{
+                        name:'xpf'
+                    }
+                })
+
+                使用es6的解构传参，此时method有了一个默认值，为get
+                1、不传递method的时候，为默认的get，传递了method的时候，为传递的值
+                2、传递参数的时候，参数的顺序可以随便写
+
+            5、遍历Map集合
+                
+
+---
+linux上下载指定版本的的nodejs
+https://blog.csdn.net/qq_42393859/article/details/89914356?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>运算符相关内容</title>
+
+<script type="text/javascript">
+	/*
+	1. 一元运算符
+	*/
+	var a = 10;
+	document.write(a++ +"<br>");
+	document.write(++a +"<br>");
+	
+	var i1 = "123";
+	var i2 = 2;
+	var num = i1 + i2;
+	document.write(num +"<br>");
+	var num = +i1 + i2;
+	document.write(num +"<br>");
+	//string转number
+	var i3 = "abc";
+	document.write(+i3 +"---"+typeof(+i3)+"<br>");
+	//boolean转number
+	var f1 = true;
+	var f2 = false;
+	document.write("true:"+ (+f1) +"<br>");
+	document.write("false:"+ (-f2) +"<br>");
+	
+	/*
+	2. 算数运算符
+	  + - * % /
+	*/
+	let num1 = 3;
+	let num2 = 7;
+	document.write(num1/num2 +"<br>");
+	document.write(num1%num2 +"<br>");
+	
+	
+	/*
+	3.比较运算符	
+	*/
+	var s1 = 10;
+	var s2 = 7;
+	var str1 = "abc";
+	var str2 = "abd";
+	var str3 = "10";
+	var str4 = "7";
+	document.write((s1>s2) +"<br>");
+	document.write((str1>str2) +"<br>");
+	document.write((str3>str4) +"<br>");
+	
+	document.write((s1>str4)+"<br>");
+	document.write("s1==str3:"+(s1==str3)+"<br>");
+	document.write("s1===str3:"+(s1===str3)+"<br>");
+	
+	/*
+	4.逻辑运算符
+		其他类型转换成boolean：
+			1.number: 0和NaN为false，非0为true；
+			2.string：除了空字符串为false，其余全为true；
+			3.null:为false
+			4.undefined：为false
+			5.对象：为true
+	*/
+	var flag = true;
+	document.write(!flag+"<br>");
+	
+	var num = NaN;
+	document.write("number:"+!!num+"<br>");
+	
+	var str = "";
+	document.write("string:"+!!str+"<br>");
+	
+	var obj = null;
+	document.write("null:"+!!obj+"<br>");
+	
+	var test;
+	document.write("undefined:"+!!test+"<br>");
+	
+	var Array = new Array();
+	document.write("对象:"+!!Array+"<br>");
+	
+	
+</script>
+
+</head>
+<body>
+</body>
+</html>
+
+
+
+
+

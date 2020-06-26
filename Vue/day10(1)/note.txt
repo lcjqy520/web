@@ -1,0 +1,317 @@
+路由
+    架构师
+        路由设计、请求、登录、状态机配置
+    程序员
+        文章管理、新增路由、会用状态机
+复习
+    1、路由基础
+        1) 路由的定义
+            一个路由对应一个组件
+            /article --> Article.vue
+
+            1. 安装
+                1、script引入
+                    <script src='vue.js'></script>
+                    <script src='vue-router.js'></script>
+                2、重新创建项目
+                    > vue create app04
+                    勾选babel + Router
+                3、已创建好的项目(不包含路由)
+                    通过vue插件安装
+                    > vue add router
+
+            2. 路由使用
+                1、定义组件
+                    let Article = {
+                        template:`<div>文章管理</div>`
+                    }
+                2、创建router实例对象
+                    let router = new VueRouter({
+                        3、定义路由
+                        routes:[{
+                            path:'/article',
+                            component:Article
+                        }]
+                    })
+                4、将router对象注入根组件
+                    new Vue({
+                        el:'#app',
+                        router,
+                    })
+                5、路由出口
+                    <router-view></router-view>
+                6、实现跳转
+                    <router-link to="/article">文章管理</router-link>
+        
+        2) 动态路由
+            let router = new VueRouter({
+                3、定义路由
+                routes:[{
+                    path:'/article/:id',
+                    component:Article
+                }]
+            })
+            <router-link to="/article/1">文章管理一</router-link>
+            <router-link to="/article/2">文章管理二</router-link>
+
+            参数监听:
+                watch:{
+                    $route(to,from){
+
+                    }
+                }
+
+                let Article = {
+                    template:`<div>文章管理</div>`,
+                    beforeRouteUpdate(to,from,next){
+
+                    }
+                }
+
+        3) 匹配所有路由
+            实现404页面
+            let router = new VueRouter({
+                3、定义路由
+                routes:[{
+                    path:'/article/:id',
+                    component:Article
+                },{
+                    path:'*',
+                    component:Default
+                }]
+            })
+
+        4) 编程式导航
+            1. this.$router.push()
+                实现路由的跳转
+                this.$router.push('/article')
+
+                this.$router.push({
+                    path:'/article',
+                    query:{articleId}
+                })
+
+                this.$route.query.articleId
+
+            2. this.$router.replace()
+            3. this.$router.go(n)
+                this.$router.go(-1)
+
+        5) 命名路由
+            let router = new VueRouter({
+                3、定义路由
+                routes:[{
+                    name:'article',
+                    path:'/article',
+                    component:Article
+                }]
+            })
+
+            this.$router.push({
+                name:'article',
+                params:{articleId}
+            })
+            this.$route.params.articleId
+
+        6) 重定向
+            let router = new VueRouter({
+                3、定义路由
+                routes:[{
+                    path:'/',
+                    redirect:'/article'
+                },{
+                    path:'/article',
+                    component:Article
+                }]
+            })
+        
+        7) 路由模式
+            let router = new VueRouter({
+                路由模式
+                mode:'history',
+                3、定义路由
+                routes:[{
+                    path:'/',
+                    redirect:'/article'
+                },{
+                    path:'/article',
+                    component:Article
+                }]
+            })
+
+            http://www.baidu.com/article
+        
+    2、路由进阶
+        1) 嵌套路由
+            /order/all
+            /order/completed
+            /order/uncompleted
+
+        2) 导航守卫
+            1. 组件内守卫
+                beforeRouteUpdate
+                beforeRouteEnter
+                beforeRouteLeave
+            2. 全局守卫
+                let router = new VueRouter({})
+                router.beforeEach((to,from,next)=>{
+                    next()
+                })
+            3. 路由独享守卫
+                let router = new VueRouter({
+                    3、定义路由
+                    routes:[{
+                        path:'/',
+                        redirect:'/article'
+                    },{
+                        path:'/article',
+                        component:Article,
+                        beforeEnter:(to,from,next)=>{
+                            next()
+                        }
+                    }]
+                })
+
+学习
+    9、vuex状态机
+        1) 介绍
+            需求：
+                文章管理页面    加载所有栏目信息
+                栏目管理页面    加载所有栏目信息 
+
+                将categories提取到公共部分，所有的组件都可以调用
+
+            解决：
+                将vm设置到全局window
+            
+            1、状态机可以将所有需要共享的数据进行统一的维护，当某一个组件需要的时候，直接引入即可
+            2、状态机也可以对请求代码进行封装，其他的任何组件都可以调用
+
+        2) vuex的安装
+            1、script引入
+            2、npm
+                > cnpm install vuex --save
+            3、通过vue插件
+                > vue add vuex
+
+        3) 辅助函数(在使用状态机的时候，会方便一点)
+            当一个组件需要获取多个状态的时候，将这些状态都声明为计算属性会有些重复和冗余。为了解决这个问题，我们可以使用 mapState 辅助函数帮助我们生成计算属性，让你少按几次键
+
+            ...mapState
+            ...mapGetters
+            ...mapMutations
+            ...mapActions
+
+        4) 使用vuex的步骤
+            1、创建vuex对象
+                let store = new Vuex.Store({
+                    state:{},
+                    getters:{},
+                    mutations:{},
+                    actions:{}
+                })
+
+            2、注入到vue的根实例对象
+                new Vue({
+                    el:'#app',
+                    store,
+                })
+
+            3、使用
+                在vue实例对象的所有子组件可以通过this来访问store(this.$store)
+                1) 访问state
+                    this.$store.state.xxx
+
+                    computed:{
+                        ...mapState(['xxx'])
+                    }
+                2) 访问getters
+                    this.$store.getters.xxx
+
+                    computed:{
+                        ...mapGetters(['xxx'])
+                    }
+                3) 访问mutations
+                    this.$store.commit('xxx')
+
+                    methods:{
+                        ...mapMutations(['xxx'])
+                    }
+                4) 访问actions
+                    this.$store.dispatch('xxx')
+
+                    methods:{
+                        ...mapActions(['xxx'])
+                    }
+
+        5) 在脚手架中的使用
+            1. 新建一个项目
+                > vue create app05
+                    选择Bebel + Router + Vuex
+            2. 通过vue插件
+                > vue add router
+
+        6) 写代码的步骤
+            1. 创建子模块的状态机category.js
+            2. 去store/index.js里面导入并注册新建的子模块
+            3. 去状态category.js写代码
+            4. 在Category.vue获取辅助函数
+            5. 在Category.vue中通过辅助函数进行方法调用或者变量获取
+
+        7) axios
+            axios用于封装底层的XMLHttpRequest(ajax)，基于promise对象，可以对于响应信息做二次封装
+            1. 底层接口
+                1、直接通过axios底层函数发送请求
+                    axios(config)
+
+                2、先创建axios实例对象，在创建时可以做一些配置，这样，所有的axios实例对象都可以使用该配置
+                    let axios = axios.create(config)
+                
+                3、为axios配置默认值
+                    axios.defaults.xxx
+
+                    config是一个对象
+                        {
+                            url,
+                            method, 请求方式
+                            baseURL, 基路径，一个完整的请求路径url + baseURL localhost:8080 + /article/findAllArticle
+                            data, 放在请求体中被传递的参数
+                            params, 拼接在url后面的参数，格式一般为查询字符串(键值对形式)
+                            headers, 请求头 Content-Type
+                            timeout 最长请求时间，超过后该请求流产
+                        }
+                    
+                    对于响应信息做二次封装
+                        接口响应的数据格式
+                            {
+                                status:200,
+                                message:'success',
+                                data:[{}],
+                                timestamp
+                            }
+
+                            res.data
+
+                        axios的响应结果
+                            {
+                                status:200,
+                                statusText:'',
+                                {
+                                    status:200,
+                                    message:'success',
+                                    data:[{}],
+                                    timestamp
+                                }
+                            }
+
+                            res.data.data
+                        
+                案例：参考4-axios.html
+
+                1. axios会自动的将data中的对象转换为json字符串，而jQuery的ajax则是查询字符串(键值对形式)        
+                2. axios时基于promise对象，axios()实际上是发送了请求返回了一个promise对象，所以可以通过.then拿到返回结果
+
+            2. 便捷接口
+                axios.get(url[,config])
+                axios.post(url,data,[,config])
+

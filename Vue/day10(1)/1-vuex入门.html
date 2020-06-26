@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>备忘录</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+</head>
+<body>
+    <div id='app'>
+        <h3>备忘录</h3>
+        <form @submit.prevent='addMemoHandler'>
+            <input type="text" v-model='msg'>
+            <input type="submit" value="保存">
+        </form>
+        <ul>
+            <li v-for='item in list' :key='item.id'>
+                <span>{{item.id}}</span>
+                <span>{{item.message}}</span>
+                <span>{{item.time}}</span>
+                <a href="" @click.prevent='delMemo(item.id)'>删除</a>
+            </li>
+        </ul>
+    </div>
+    <script>
+        new Vue({
+            el:'#app',
+            data(){
+                return {
+                    msg:'',
+                    list:[],
+                    index:1
+                }
+            },
+            methods:{
+                // 添加
+                addMemoHandler(){
+                    let memo = {
+                        id:this.index,
+                        message:this.msg,
+                        time:new Date()
+                    }
+                    this.list.push(memo)
+                    this.index++;
+                },
+                // 删除
+                delMemo(id){
+                    this.list = this.list.filter((item)=>{
+                        return item.id != id
+                    })
+                }
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>axios-post</title>
+    <!-- 引入vue -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+    <!-- 引入axios -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.19.2/axios.js"></script>
+    <!-- 引入qs -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/qs/6.9.4/qs.js"></script>
+</head>
+<body>
+    <script>
+        // 基路径
+        let baseURL = 'http://39.96.21.48:8099'
+        // url
+        let url = '/manager/article/saveOrUpdateArticle'
+        let data = {
+            title:'xpf001',
+            liststyle:1
+        }
+
+        // 将对象转换为查询字符串
+        // key1=value1&key2=value2
+        // 第三方库 qs
+
+        // 保存文章
+        axios.post(baseURL+url,Qs.stringify(data)).then((res)=>{
+            console.log(res.data.data)
+        })
+    </script>
+</body>
+</html>

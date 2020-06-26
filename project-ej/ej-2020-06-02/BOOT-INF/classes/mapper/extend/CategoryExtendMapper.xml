@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.apps.ej.dao.extend.CategoryExtendMapper">
+    <select id="query" resultMap="com.briup.apps.ej.dao.CategoryMapper.BaseResultMap">
+        select *
+        from ej_category As c
+        <where>
+            <if test="category.name != null">
+                c.name  like concat('%',#{category.name},'%')
+            </if>
+            <if test="category.num != null">
+                AND c.num like concat('%',#{category.num},'%')
+            </if>
+        </where>
+        limit ${page*pageSize},${pageSize}
+    </select>
+    <select id="count" resultType="long">
+        select count(*)
+        from ej_category AS c
+        <where>
+            <if test="category.name != null">
+                c.name  like concat('%',#{category.name},'%')
+            </if>
+            <if test="category.num != null">
+                AND c.num like concat('%',#{category.num},'%')
+            </if>
+
+        </where>
+    </select>
+    <select id="selectAll" resultMap="CategoryTreeResultMap">
+    SELECT *
+    FROM ej_category
+    WHERE parent_id is null
+    </select>
+    <select id="selectByParentId" resultMap="CategoryTreeResultMap">
+        <!--<select id="selectByParentId" resultType="com.briup.apps.cms.bean.BasePrivilege">-->
+        SELECT *
+        FROM ej_category
+        WHERE parent_id = #{id,jdbcType=BIGINT}
+    </select>
+    <resultMap id="CategoryTreeResultMap" type="com.briup.apps.ej.vm.CategoryTree" extends="com.briup.apps.ej.dao.CategoryMapper.BaseResultMap">
+        <collection property="children" column="id" select="selectByParentId"></collection>
+    </resultMap>
+</mapper>

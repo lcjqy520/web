@@ -1,0 +1,247 @@
+0、课调
+    1) 切屏速度较快
+    2) 知识点的过渡
+    3) 上课互动
+    4) 全局作用域、局部作用域、块级作用域
+        全局作用域(全局变量):声明在函数外部的变量，在其他任意地方都可以调用
+            不使用关键字var
+        局部作用域(局部变量)：声明在函数内部的变量，一般只有在函数内部访问到
+        块级作用域：在es6中，使用let、const声明在{}内部的变量，只能在{}内访问
+
+        function sayName(){
+
+        }
+        if(){
+
+        }
+    5) 看点咨询精选
+        搜索(日期选择器)
+        删除
+
+1、高级组件
+    1) 基本组件
+        1. 组件注册
+            Vue.component('xpf-div',{
+                template:`
+                    <div>hello vue</div>
+                `,
+                data(){
+                    return {}
+                },
+                props:['title']
+            })
+
+        2. 组件的调用
+            理解：
+                组件的定义实际上可以理解为函数的定义，组件的调用类似于函数的调用
+                函数调用的时候可以传递参数，组件可以使用属性进行传递
+            <xpf-div title='hello'></xpf-div>
+
+            注意：
+            在调用xpf-alert组件的时候，传递一个参数visible，值是一个字符串的false
+            <xpf-alert title='hello xpf' visible='false'></xpf-alert>
+
+            在调用xpf-alert组件的时候，传递一个参数visible，值是一个布尔值的false
+            <xpf-alert title='hello xpf' :visible='false'></xpf-alert>
+
+            在调用xpf-alert组件的时候，传递一个参数visible，值是一个数字的1
+            <xpf-alert title='hello xpf' :visible='1'></xpf-alert>
+
+            在调用xpf-alert组件的时候，传递一个参数visible，值是一个对象
+            <xpf-alert title='hello xpf' :visible='{name:"xpf"}'></xpf-alert>
+
+            在调用xpf-alert组件的时候，传递一个参数visible，值是一个数组
+            <xpf-alert title='hello xpf' :visible='[1,2,3]'></xpf-alert>
+
+    2) 组件参数的类型声明
+        如果期望接受的参数拥有指定的数据类型，可以通过对象的形式列出props中的属性
+        props:{
+            期望接受的参数:该参数的数据类型
+        }
+
+        1. 组件的注册
+            xpf-alert
+            template:`
+                <div>
+                    hello vue
+                    <div v-if='visible'>{{title}}</div>
+                </div>
+            `,
+            props:{
+                // 期望接收到的title是一个字符串
+                title:String,
+                // 期望接收到的visible是一个布尔类型
+                visible:Boolean
+            }
+            1、参数的声明
+                props: {
+                    title: String,
+                    likes: Number,
+                    isPublished: Boolean,
+                    commentIds: Array,
+                    author: Object,
+                    callback: Function,
+                    contactsPromise: Promise // or any other constructor,
+                    time:Date
+                }
+
+            2、参数验证
+                对于子组件(注册的组件)调用时，参数是否必须传递，以及参数的数据类型，可以设置
+                props:{
+                    // 期望接收到的title是一个字符串，且参数title不能省略
+                    title:{
+                        type:String,
+                        required:true
+                    },
+                    // 期望接收到的visible是一个布尔类型
+                    visible:Boolean
+                }
+
+        2. 组件的调用
+            错误代码：<xpf-alert title='hello xpf' visible='false'></xpf-alert>
+            正确代码：<xpf-alert title='hello xpf' :visible='false'></xpf-alert>
+
+            由于true/false是关键字，会被浏览器解析为布尔类型的值，所以可以通过v-bind直接绑定
+
+            上面的写法等于下面的写法
+            <xpf-alert title='hello xpf' :visible='ifVisible'></xpf-alert>
+            data() {
+                return {
+                    ifVisible:false
+                }
+            }
+        
+    3) 单向数据流(参数传递)
+        父组件中的变量的改变会向下流动到子组件中，引起子组件的改变
+        
+        父组件      -->         子组件
+        visible                 v-if='visible'
+            true                显示
+            false               隐藏
+        
+        注意：
+            1. 将某段代码封装成一个组件，而这个组件又在另一个组件中引入，
+                引入该组件的叫做父组件，被引入的组件叫做子组件
+            
+                <div id="app">
+                    <xpf-alert title='hello xpf' :visible='ifVisible'></xpf-alert>
+                </div>
+                Vue.component('xpf-alert',{})
+                父组件：id为app的div
+                子组件：xpf-alert
+            
+            2. 在子组件中，不能直接改变父组件传递过来的变量的值
+                错误代码：
+                    Vue.component('xpf-alert',{
+                        template:`
+                            <div>
+                                hello vue --- {{title}}
+                                <div @click="changeTitle">更改title</div>
+                            </div>
+                        `,
+                        methods:{
+                            changeTitle(){
+                                this.title = 'xpf';
+                            }
+                        },
+                        props:{
+                            title:String
+                        }
+                    })
+                正确代码一：(将props的变量放入data中)
+                    Vue.component('xpf-alert',{
+                        template:`
+                            <div>
+                                hello vue --- {{title}}  --- {{newTitle}}
+                                <div @click="changeTitle">更改title</div>
+                            </div>
+                        `,
+                        methods:{
+                            changeTitle(){
+                                this.newTitle = 'xpf';
+                            }
+                        },
+                        data(){
+                            return {
+                                newTitle:this.title
+                            }
+                        },
+                        props:{
+                            title:String
+                        }
+                    })
+                正确代码二：(将props的变量放入computed中)
+                    参考：3-单向数据流.html
+                
+        案例：
+
+    4) 自定义事件
+        父组件        <---      子组件
+        @xxx=''                 this.$emit('xxx')     
+
+        父组件通过@xxx=''监听
+        子组件通过this.$emit('xxx')，通知父组件进行变量的修改
+        参考：4-案例.html
+    
+    5) 插槽
+        子组件通过slot接收父组件传递过来的子模版(标签)
+        1. 默认插槽
+            1、组件的定义
+                Vue.component('xpf-alert',{
+                    template:`
+                        <div>
+                            <slot></slot>
+                            {{title}}
+                        </div>
+                    `,
+                    props:['title']
+                })
+            2、组件的调用
+                <xpf-alert title='警告'>
+                    <h1>你好</h1>
+                </xpf-alert>
+            
+            注意：
+                1. 浏览器在解析的时候，会将slot替换为h1标签
+                    警告 --> title
+                    h1   -->  slot
+                2. 没有包含一个 <slot> 元素，则该组件起始标签和结束标签之间的任何内容都会被抛弃
+
+        2. 具名插槽
+            在使用多个插槽，并且希望它们的位置不同时，可以使用具名插槽
+            1、组件的定义
+                Vue.component('xpf-alert',{
+                    template:`
+                        <div>
+                            <slot name='header'></slot>
+                            {{title}}
+                            <slot name='footer'></slot>
+                        </div>
+                    `,
+                    props:['title']
+                })
+
+            2、组件的调用
+                <xpf-alert title='警告'>
+                    <template v-slot:header>
+                        <h1>你好</h1>
+                        <a href="">删除</a>
+                    </template>
+
+                    <template v-slot:footer>
+                        <h3>hello vue</h3>
+                    </template>
+                </xpf-alert>
+
+                注意：
+                    1. template内部的所有标签都会被传入相对应的插槽内部
+                    2. v-slot只能绑定在template上
+                        <template>
+                            <h3 v-slot:footer>hello vue</h3>
+                        </template>
+                        报错：v-slot can only be used on components or <template>
+                    3. 没有使用v-slot的template，其内部的所有内容会被传入到默认插槽内
+                    
+        3. 作用域插槽
+    
+

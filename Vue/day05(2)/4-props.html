@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件传值</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <xpf-alert title='hello vue'></xpf-alert>
+        <xpf-alert title='hello xpf' xpf='许品锋'></xpf-alert>
+    </div>
+
+    <script>
+        // 全局注册组件
+        Vue.component('xpf-alert',{
+            template:`
+                <div>{{title}}---{{xpf}}</div>
+            `,
+            props:['title','xpf']
+        })
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>

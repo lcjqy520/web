@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.apps.ej.dao.extend.WaiterExtendMapper">
+    <select id="query" resultMap="com.briup.apps.ej.dao.BaseUserMapper.BaseResultMap">
+        select *
+        from base_user As w
+        <where>
+            <if test="waiter.telephone != null">
+                w.telephone  like concat('%',#{waiter.telephone},'%')
+            </if>
+            <if test="waiter.realname != null">
+                AND w.telephone like concat('%',#{waiter.realname},'%')
+            </if>
+            <if test="waiter.idcard != null">
+                AND w.idcard like concat('%',#{waiter.idcard} ,'%')
+            </if>
+            <if test="waiter.status != null">
+                AND w.status like concat('%',#{waiter.status} ,'%')
+            </if>
+            AND w.type like concat('%','waiter','%')
+        </where>
+        limit ${page*pageSize},${pageSize}
+    </select>
+    <select id="count" resultType="long">
+        select count(*)
+        from base_user As w
+        <where>
+            <if test="waiter.telephone != null">
+                w.telephone  like concat('%',#{waiter.telephone},'%')
+            </if>
+            <if test="waiter.realname != null">
+                AND w.telephone like concat('%',#{waiter.realname},'%')
+            </if>
+            <if test="waiter.idcard != null">
+                AND w.idcard like concat('%',#{waiter.idcard} ,'%')
+            </if>
+            <if test="waiter.status != null">
+                AND w.status like concat('%',#{waiter.status} ,'%')
+            </if>
+            AND w.type like concat('%','waiter','%')
+        </where>
+    </select>
+</mapper>
